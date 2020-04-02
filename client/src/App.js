@@ -2,6 +2,8 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+import LoginForm from "./Components/LoginForm";
+
 class App extends React.Component {
 
   stat={
@@ -12,7 +14,7 @@ class App extends React.Component {
   render(){
     return (
       <div className="App">
-      
+        <LoginForm />
       </div>
     );
   }
