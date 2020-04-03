@@ -23,6 +23,9 @@ class App extends React.Component {
 
   connect = (username) =>{
     this.socket = openSocket("http://localhost:3001");
+    const message = {username: username};
+    console.log(message);
+    this.socket.emit('login',{username: username});
     this.socket.on('welcome',(data)=>{
       console.log(data);
       this.setState({username: data.username, online: true});
