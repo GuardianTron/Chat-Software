@@ -9,6 +9,7 @@ export default class LoginForm extends Component{
 
     render(){
         return <form onSubmit={this.connect}>
+            {this.props.message || <h2>{this.props.message}</h2>}
             <p>
                 <label htmlFor="username">User Name: </label>
                 <input type="text" id="username" name="username" onChange={this.onchange} />
