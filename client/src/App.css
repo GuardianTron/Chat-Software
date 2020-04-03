@@ -39,6 +39,20 @@
 
 .message-window{
   height: 400px;
-  border: solid, black;
+  margin: 10px;
+  border: 2px solid black;
+  padding: 0;
   overflow: auto;
+  text-align: left;
 }
+
+.message-window li:nth-child(odd){
+  background-color: rgb(150,200,200);
+}
+
+.message-window li{
+  list-style: none;
+  padding: 5px 10px;
+}
+
+
