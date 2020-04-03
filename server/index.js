@@ -5,7 +5,12 @@ app.use(cors());
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
-const users = {};
+const Users = require("./models/Users").Users;
+
+
+const users = new Users();
+
+
 
 server.listen(process.env.CHAT_PORT || 3001);
 
@@ -13,8 +18,8 @@ io.on('connection', socket =>{
     console.log("connection established");
     socket.on('login',data =>{
         console.log(data);
-        if(!users.hasOwnProperty(data.username)){
-            users[data.username] = socket;
+        if(!users.hasUser(data.username)){
+            users.addUser(data.username,socket.id);
             console.log(`Added user: ${data.username}`);
             socket.emit('welcome',{message:"Welcome to the chat",username:data.username});
         }
