@@ -5,7 +5,7 @@ app.use(cors());
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
-const Users = require("./models/Users").Users;
+const {Users, UserExistsError, InvalidUserError} = require("./models/Users");
 
 
 const users = new Users();
@@ -18,15 +18,17 @@ io.on('connection', socket =>{
     console.log("connection established");
     socket.on('login',data =>{
         console.log(data);
-        if(!users.hasUser(data.username)){
+        
+        try{
             users.addUser(data.username,socket.id);
             console.log(`Added user: ${data.username}`);
             socket.emit('welcome',{message:"Welcome to the chat",username:data.username});
         }
-        else{
-            console.log(`Username: ${data.username} has already been used.`);
-            socket.emit('name-error',{message:"Username has already been used."});
+        catch(error){
+            console.log(error.message);
+            socket.emit('name-error',{message: error.message});
             socket.disconnect();
+            
         }
     });
 
