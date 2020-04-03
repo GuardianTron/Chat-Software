@@ -1,5 +1,6 @@
 class Users{
 
+    usernameRE = /^[\w!.\?\~][\w!.\?\~@ ]{0,30}[\w!.\?\~]$/i
     constructor(){
         this.users = {};
     }
@@ -7,12 +8,18 @@ class Users{
     hasUser(username){
         return this.users.hasOwnProperty(username);
     }
+
+    validateUsername(username){
+        return this.usernameRE.test(username);
+    }
     addUser(username, socketId){
         if(this.hasUser(username)){
-            return false;
+            throw new UserExistsError(username);
+        }
+        else if(!this.validateUsername(username)){
+            throw new InvalidUserError(username);
         }
         this.users[username] = socketId;
-        return true;
     }
 
     getSocketId(username){
@@ -31,4 +38,20 @@ class Users{
     }
 }
 
+class UserExistsError extends Error{
+
+    constructor(username){
+        super(`Username ${username} has been taken.`);
+    }
+}
+
+class InvalidUserError extends Error{
+
+    constructor(username){
+        super(`Username: ${username} is invalid.`);
+    }
+}
+
 module.exports.Users = Users;
+module.exports.UserExistsError = UserExistsError;
+module.exports.InvalidUserError = InvalidUserError;
