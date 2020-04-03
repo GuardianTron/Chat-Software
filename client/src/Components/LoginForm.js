@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import openSocket from 'socket.io-client';
+
 
 export default class LoginForm extends Component{
 
@@ -17,11 +17,7 @@ export default class LoginForm extends Component{
 
     connect = (event) =>{
         event.preventDefault();
-        const socket = openSocket("http://localhost:3001");
-        socket.on('welcome',(data) => {
-            console.log(data);
-            this.props.handleConnection(socket, data.username);
-        })
+        this.props.handleConnection();
 
     }
 }

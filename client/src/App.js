@@ -1,5 +1,7 @@
 import React from 'react';
+import openSocket from "socket.io-client";
 import './App.css';
+
 
 import LoginForm from "./Components/LoginForm";
 
@@ -19,9 +21,15 @@ class App extends React.Component {
     );
   }
 
-  connect = (socket,username) =>{
-    this.socket = socket;
-    this.setState({username: username, online: true});
+  connect = (username) =>{
+    this.socket = openSocket("http://localhost:3001");
+    this.socket.on('welcome',(data)=>{
+      console.log(data);
+      this.setState({username: data.username, online: true});
+    
+    });
+ 
+    
   }
 }
 
