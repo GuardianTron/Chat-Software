@@ -8,7 +8,7 @@ export default class ChatForm extends Component{
     render(){
         const messages = this.props.messages;
         return <>
-        <ul>
+        <ul className="message-window" id="message-display">
             {messages.map((message,index) =>{
                 console.log(message);
                 return <li key={index}>{message.username}: {message.message}</li>;
@@ -34,6 +34,11 @@ export default class ChatForm extends Component{
         this.props.sendHandler(this.state.message);
         this.setState({message: ""});
         
+    }
+
+    componentDidUpdate(prevProps,prevState,snapshot){
+        const messageWindow = document.getElementById("message-display");
+        messageWindow.scrollTo(0,messageWindow.scrollHeight);
     }
 
 
