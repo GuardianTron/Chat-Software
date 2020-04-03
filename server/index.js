@@ -16,13 +16,22 @@ io.on('connection', socket =>{
         if(!users.hasOwnProperty(data.username)){
             users[data.username] = socket;
             console.log(`Added user: ${data.username}`);
-            socket.emit('welcome',{message:"Welcome to the chat",username:"muh-name"});
+            socket.emit('welcome',{message:"Welcome to the chat",username:data.username});
         }
         else{
             console.log(`Username: ${data.username} has already been used.`);
             socket.emit('name-error',{message:"Username has already been used."});
             socket.disconnect();
         }
+    });
+
+    socket.on('message', data =>{
+        console.log(data);
+        io.sockets.emit('message',{
+            type: "message",
+            username: data.username,
+            message: data.message
+        });
     });
     
     socket.on('disconnect',data =>{
