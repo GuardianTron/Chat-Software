@@ -20,6 +20,7 @@ export default class LoginForm extends Component{
         const socket = openSocket("http://localhost:3001");
         socket.on('welcome',(data) => {
             console.log(data);
+            this.props.handleConnection(socket, data.username);
         })
 
     }

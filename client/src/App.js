@@ -5,7 +5,8 @@ import LoginForm from "./Components/LoginForm";
 
 class App extends React.Component {
 
-  stat={
+  socket = null;
+  state={
     username: '',
     online: false
   };
@@ -13,10 +14,18 @@ class App extends React.Component {
   render(){
     return (
       <div className="App">
-        <LoginForm />
+        {this.state.online || <LoginForm handleConnection={this.connect} />}
       </div>
     );
   }
+
+  connect = (socket,username) =>{
+    this.socket = socket;
+    this.setState({username: username, online: true});
+  }
 }
+
+
+
 
 export default App;

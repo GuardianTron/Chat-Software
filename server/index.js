@@ -8,7 +8,7 @@ const io = require('socket.io')(server);
 server.listen(process.env.CHAT_PORT || 3001);
 
 io.on('connection', socket =>{
-    socket.emit('welcome',{message:"Welcome to the chat"});
+    socket.emit('welcome',{message:"Welcome to the chat",username:"muh-name"});
 
     socket.on('disconnect',data =>{
         console.log(data);
