@@ -29,6 +29,7 @@ class App extends React.Component {
 
   connect = (username) =>{
     this.socket = openSocket("http://localhost:3001");
+    
     const message = {username: username};
     console.log(message);
     this.socket.emit('login',{username: username});
@@ -38,7 +39,7 @@ class App extends React.Component {
     });
 
     this.socket.on('message',data =>{
-   
+      console.log(`Socket id: ${this.socket.id} - Username: ${data.username}`);
       this.setState({texts:[...this.state.texts,data]});
     });
 

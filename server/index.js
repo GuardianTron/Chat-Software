@@ -21,7 +21,7 @@ io.on('connection', socket =>{
         
         try{
             users.addUser(data.username,socket.id);
-            console.log(`Added user: ${data.username}`);
+            console.log(`Added user: ${data.username}:${socket.id}`);
             socket.emit('welcome',{message:"Welcome to the chat",username:data.username});
         }
         catch(error){
@@ -33,12 +33,20 @@ io.on('connection', socket =>{
     });
 
     socket.on('message', data =>{
-        console.log(data);
-        io.sockets.emit('message',{
-            type: "message",
-            username: data.username,
-            message: data.message
-        });
+        console.log(data,socket.id);
+        //inject username into message to prevent spoofing
+        try{
+            const username = users.getUsernameBySocketId(socket.id);
+            io.sockets.emit('message',{
+                type: "message",
+                username: username,
+                message: data.message
+            });
+        }
+        catch(e){
+            console.log(e.message);
+        }
+        
     });
     
     socket.on('disconnect',data =>{

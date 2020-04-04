@@ -3,6 +3,7 @@ class Users{
     usernameRE = /^[\w!.\?\~][\w!.\?\~@ ]{0,30}[\w!.\?\~]$/i
     constructor(){
         this.users = {};
+        this.usersBySocket = {};
     }
 
     hasUser(username){
@@ -20,6 +21,7 @@ class Users{
             throw new InvalidUserError(username);
         }
         this.users[username] = socketId;
+        this.usersBySocket[socketId] = username;
     }
 
     getSocketId(username){
@@ -29,7 +31,16 @@ class Users{
         return this.users[username];
     }
 
+    getUsernameBySocketId(socketId){
+        if(!this.usersBySocket.hasOwnProperty(socketId)){
+            throw new InvalidSocketIdError(socketId);
+        }
+        return this.usersBySocket[socketId];
+    }
+
     removeUser(username){
+        socketId = this.users[username];
+        delete this.usersBySocket[socketId];
         delete this.users[username];
     }
 
@@ -52,6 +63,14 @@ class InvalidUserError extends Error{
     }
 }
 
+class InvalidSocketIdError extends Error{
+    
+    constructor(socketId){
+        super(`Socket:  ${socketId} has no user associated with it.`);
+    }
+}
+
 module.exports.Users = Users;
 module.exports.UserExistsError = UserExistsError;
 module.exports.InvalidUserError = InvalidUserError;
+module.exports.InvalidSocketIdError = InvalidSocketIdError;
