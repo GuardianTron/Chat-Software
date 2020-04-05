@@ -13,50 +13,13 @@ export default class ChatForm extends Component{
     }
     render(){
         const messages = this.props.messages;
-        const WrapLinks = content =>{
-            const contentParts = [];
-            const linkRegex = /(https?:\/\/|www\.)(\S+)/ig;
-
-            if(!content.match(linkRegex)){
-                return <>{content}</>;
-            }
-            //replace urls with links
-            let nextIndex = 0;
-            for(let match of content.matchAll(linkRegex)){
-                let url = match[0];
-                let scheme = match[1];
-                let remainder = match[2];
-                
-
-                //make sure links are external in case of wwww
-                if(scheme === "www."){
-                    remainder = scheme+remainder;
-                    scheme="http://";
-                }
-
-                contentParts.push(content.substring(nextIndex,match.index));
-                nextIndex = match.index + url.length;
-                //only add url if it is valid
-                try{
-                    new URL(url);
-                    contentParts.push(<a key={match.index.toString()} href={scheme+escape(remainder)} target="_blank" rel="noopener noreferrer">{url}</a>);
-                }
-                catch(e){
-                    //add url back in without wrapping in link
-                    contentParts.push(url);
-                }
-            }
-            //add the last text portion of the content
-            contentParts.push(content.substring(nextIndex));
-            return <>{contentParts}</>;
-
-        }
+        
         
         return <>
         <ul className="message-window" ref={this.messageWindowRef}>
             {messages.map((message,index) =>{
                 console.log(message);
-                return <li key={index}>{message.username}: {WrapLinks(message.message)}</li>;
+                return <li key={index}>{message.username}: <WrapLinks content={message.message}/></li>;
             })
         }
             
@@ -86,5 +49,49 @@ export default class ChatForm extends Component{
         this.messageWindowRef.current.scrollTo(0,this.messageWindowRef.current.scrollHeight);
     }
 
+
+}
+
+const WrapLinks = ({content}) =>{
+    const contentParts = [];
+    const linkRegex = /(https?:\/\/|www\.)(\S+)/ig;
+
+    if(!content.match(linkRegex)){
+        return <>{content}</>;
+    }
+    //replace urls with links
+    let nextIndex = 0;
+    for(let match of content.matchAll(linkRegex)){
+        let url = match[0];
+        let scheme = match[1];
+        let remainder = match[2];
+        
+
+        //make sure links are external in case of wwww
+        if(scheme === "www."){
+            remainder = scheme+remainder;
+            scheme="http://";
+        }
+
+        contentParts.push(content.substring(nextIndex,match.index));
+        nextIndex = match.index + url.length;
+        /*
+         * Only make url into link if valid
+         * scheme+remainder is used to preserve 
+         * url text in case that url submitted did not have a
+         * scheme.
+         */
+        try{
+            new URL(scheme+remainder);
+            contentParts.push(<a key={match.index.toString()} href={scheme+escape(remainder)} target="_blank" rel="noopener noreferrer">{url}</a>);
+        }
+        catch(e){
+            //add url back in without wrapping in link
+            contentParts.push(url);
+        }
+    }
+    //add the last text portion of the content
+    contentParts.push(content.substring(nextIndex));
+    return <>{contentParts}</>;
 
 }
