@@ -83,7 +83,7 @@ const WrapLinks = ({content}) =>{
          */
         try{
             new URL(scheme+remainder);
-            contentParts.push(<a key={match.index.toString()} href={scheme+escape(remainder)} target="_blank" rel="noopener noreferrer">{url}</a>);
+            contentParts.push(<a href={scheme+escape(remainder)} target="_blank" rel="noopener noreferrer">{url}</a>);
         }
         catch(e){
             //add url back in without wrapping in link
