@@ -19,7 +19,7 @@ export default class ChatForm extends Component{
         <ul className="message-window" ref={this.messageWindowRef}>
             {messages.map((message,index) =>{
                 console.log(message);
-                return <li key={index}>{message.username}: <WrapLinks content={message.message}/></li>;
+                return <li key={message.time}>{message.senderUsername}: <WrapLinks content={message}/></li>;
             })
         }
             
@@ -29,6 +29,10 @@ export default class ChatForm extends Component{
                 <input type="text" onChange={this.onchange} value={this.state.message} ref={this.inputRef}/>
                 <button type="submit">Send Message</button>
             </p>
+            <p>
+                
+                <input type="file" onChange={this.onselectFile}/>
+            </p>
         </form>
         </>;
     }
@@ -37,9 +41,23 @@ export default class ChatForm extends Component{
         this.setState({message: event.target.value});
     }
 
+    onselectFile = event =>{
+        const reader = new FileReader();
+        try{
+            reader.readAsArrayBuffer(event.target.files[0]);
+            reader.onload = event => {
+                this.props.imageHandler(reader.result);
+            };
+        }
+        catch(error){
+            alert(error.message);
+        }
+    
+    }
+
     onsubmit = event =>{
         event.preventDefault();
-        this.props.sendHandler(this.state.message);
+        this.props.messageHandler(this.state.message);
         this.setState({message: ""});
         this.inputRef.current.focus();
         
@@ -53,6 +71,12 @@ export default class ChatForm extends Component{
 }
 
 const WrapLinks = ({content}) =>{
+    console.log('message tag', content);
+    if(content.type === "image"){
+         const blob = new Blob([new Uint8Array(content.payload)],{type: "image/png"});
+         return <img src={URL.createObjectURL(blob)} />;
+    }
+    content = content.payload;
     const contentParts = [];
     const linkRegex = /(https?:\/\/|www\.)(\S+)/ig;
 

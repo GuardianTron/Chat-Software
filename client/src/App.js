@@ -20,7 +20,7 @@ class App extends React.Component {
     return (
       <div className="App">
         {this.state.online?
-         <ChatRoom sendHandler={this.sendMessage} messages={this.state.texts}/>:
+         <ChatRoom messageHandler={this.sendMessage} imageHandler={this.sendImage} messages={this.state.texts}/>:
          <LoginForm handleConnection={this.connect} message={this.state.message}/>
          }
       </div>
@@ -30,22 +30,26 @@ class App extends React.Component {
   connect = (username) =>{
     this.socket = openSocket("http://localhost:3001");
     
-    const message = {username: username};
+    const message = {senderUsername: username};
     console.log(message);
-    this.socket.emit('login',{username: username});
+    this.socket.emit('login',message);
     
     this.socket.on('name-error',(data) =>{
-      this.setState({message: data.message});
+      this.setState({message: data.payload});
     });
 
     this.socket.on('message',data =>{
-      console.log(`Socket id: ${this.socket.id} - Username: ${data.username}`);
+      this.setState({texts:[...this.state.texts,data]});
+    });
+
+    this.socket.on('image',data =>{
+      console.log('image message',data);
       this.setState({texts:[...this.state.texts,data]});
     });
 
     this.socket.on('welcome',(data)=>{
       console.log(data);
-      this.setState({username: data.username, online: true});
+      this.setState({username: data.senderUsername, online: true});
     
     });
  
@@ -54,7 +58,11 @@ class App extends React.Component {
 
   sendMessage = message => {
     console.log(`Sending message: ${message}`);
-    this.socket.emit('message',{username: this.state.username, message:message});
+    this.socket.emit('message',{senderUsername: this.state.username, payload:message});
+  }
+
+  sendImage = imageBuffer => {
+    this.socket.emit('image',{senderUsername: this.state.username, payload: imageBuffer});
   }
 }
 
