@@ -1,32 +1,43 @@
 import React from 'react';
-import openSocket from "socket.io-client";
 import './App.css';
 
 
 import LoginForm from "./Components/LoginForm";
 import ChatRoom from "./Components/ChatRoom";
 
+import ChatConnection from "./Backend/networking";
+
 class App extends React.Component {
 
-  socket = null;
+  
+  
   state={
     username: '',
     online: false,
     message: '',
     texts: []
   };
+
+  constructor(props){
+    super(props);
+    this.chatConnection = new ChatConnection("http://localhost:3001");
+    this.chatConnection.onNameError = this.handleNameError;
+    this.chatConnection.onMessage = this.handleMessage;
+    this.chatConnection.onWelcome = this.handleWelcome;
+
+  }
   
   render(){
     return (
       <div className="App">
         {this.state.online?
-         <ChatRoom messageHandler={this.sendMessage} imageHandler={this.sendImage} messages={this.state.texts}/>:
-         <LoginForm handleConnection={this.connect} message={this.state.message}/>
+         <ChatRoom messageHandler={this.chatConnection.sendChatText} imageHandler={this.chatConnection.sendChatImage} messages={this.state.texts}/>:
+         <LoginForm handleConnection={this.chatConnection.connect} message={this.state.message}/>
          }
       </div>
     );
   }
-
+  /*
   connect = (username) =>{
     this.socket = openSocket("http://localhost:3001");
     
@@ -54,6 +65,20 @@ class App extends React.Component {
     });
  
     
+  }
+  */
+
+  handleNameError = (data) => {
+    this.setState({message: data.payload});
+  }
+
+  handleMessage = (data) => {
+    console.log("received",data);
+    this.setState({texts:[...this.state.texts,data]});
+  }
+
+  handleWelcome = (data) => {
+    this.setState({username: data.senderUsername, online: true});
   }
 
   sendMessage = message => {

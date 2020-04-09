@@ -42,11 +42,13 @@ export default class ChatForm extends Component{
     }
 
     onselectFile = event =>{
+        console.log(event.target.files[0]);
+        const imageFile = event.target.files[0];
         const reader = new FileReader();
         try{
-            reader.readAsArrayBuffer(event.target.files[0]);
+            reader.readAsArrayBuffer(imageFile);
             reader.onload = event => {
-                this.props.imageHandler(reader.result);
+                this.props.imageHandler(reader.result,imageFile.type);
             };
         }
         catch(error){
@@ -71,9 +73,10 @@ export default class ChatForm extends Component{
 }
 
 const WrapLinks = ({content}) =>{
+    /** @todo Refactor into sub components */
     console.log('message tag', content);
     if(content.type === "image"){
-         const blob = new Blob([new Uint8Array(content.payload)],{type: "image/png"});
+         const blob = new Blob([new Uint8Array(content.payload.buffer)],{type: "image/png"});
          return <img src={URL.createObjectURL(blob)} />;
     }
     content = content.payload;

@@ -41,15 +41,18 @@ io.on('connection', socket =>{
             console.log(username);
             data.senderUsername = username;
             data.fromSocketId = socket.id;
-            const message = new ChatMessage(data)
+            let message = {};
+            if(data.type == Message.IMAGE) message = new ImageMessage(data);
+            else message = new ChatMessage(data);
             console.log(message,message.toJSON());
-            io.sockets.emit(message.type,message.toJSON());
+            io.sockets.emit(Message.MESSAGE, message.toJSON());
         }
         catch(e){
             console.log(e.message);
         }
         
     });
+    /*
 
     socket.on(Message.IMAGE,data =>{
         const username = users.getUsernameBySocketId(socket.id);
@@ -60,7 +63,7 @@ io.on('connection', socket =>{
         console.log(message,message.toJSON());
         io.sockets.emit(message.type,message.toJSON());
     });
-
+    */
    
     socket.on(Message.DISCONNECT,data =>{
         console.log(data);
