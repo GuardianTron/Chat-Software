@@ -19,7 +19,7 @@ export default class ChatForm extends Component{
         <ul className="message-window" ref={this.messageWindowRef}>
             {messages.map((message,index) =>{
                 console.log(message);
-                return <li key={message.time}>{message.senderUsername}: <WrapLinks content={message}/></li>;
+                return <li key={message.time}>{message.senderUsername}: <Message content={message}/></li>;
             })
         }
             
@@ -72,14 +72,23 @@ export default class ChatForm extends Component{
 
 }
 
-const WrapLinks = ({content}) =>{
-    /** @todo Refactor into sub components */
-    console.log('message tag', content);
-    if(content.type === "image"){
-         const blob = new Blob([new Uint8Array(content.payload.buffer)],{type: "image/png"});
-         return <img src={URL.createObjectURL(blob)} />;
+const Message = ({content}) =>{
+    if(content.type == "image"){
+        return <DownloadedImage buffer={content.payload.buffer} type={content.payload.type} />
     }
-    content = content.payload;
+    else{
+        return <ParsedMessage content={content.payload} />; 
+    }
+}
+
+const DownloadedImage = props =>{
+    const {buffer,type} = props;
+    const blob = new Blob([new Uint8Array(buffer)],{type: type});
+    return <img src={URL.createObjectURL(blob)} />;
+}
+
+const ParsedMessage = ({content}) =>{
+    
     const contentParts = [];
     const linkRegex = /(https?:\/\/|www\.)(\S+)/ig;
 
