@@ -80,8 +80,9 @@ io.on('connection', socket =>{
     });
     */
    
-    socket.on(Message.DISCONNECT,data =>{
-        console.log(data);
+    socket.on('disconnect',data =>{
+
+       users.removeUserBySocketId(socket.id);
     });
 });
 

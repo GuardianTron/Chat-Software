@@ -24,7 +24,12 @@ export default class ChatConnection{
         this.socket.on('welcome',this.onWelcome);
         this.socket.on('message',this.onMessage);
         this.socket.on('disconnect',this.onServerDisconnect);
+        
 
+    }
+
+    disconnect = () =>{
+        this.socket.disconnect();
     }
 
 

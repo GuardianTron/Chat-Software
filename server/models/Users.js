@@ -39,9 +39,15 @@ class Users{
     }
 
     removeUser(username){
-        socketId = this.users[username];
+        const socketId = this.users[username];
         delete this.usersBySocket[socketId];
         delete this.users[username];
+    }
+
+    removeUserBySocketId(socketId){
+        const username = this.usersBySocket[socketId];
+        delete this.users[username];
+        delete this.usersBySocket[socketId];
     }
 
     getAllUsers(){

@@ -38,6 +38,10 @@ class App extends React.Component {
       </div>
     );
   }
+
+  componentWillUnmount(){
+    this.chatConnection.disconnect();
+  }
   /*
   connect = (username) =>{
     this.socket = openSocket("http://localhost:3001");
