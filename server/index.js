@@ -63,7 +63,7 @@ io.on('connection', socket =>{
             }
         }
         catch(e){
-            console.log(e.message);
+            socket.disconnect(true);
         }
         
     });

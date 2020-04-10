@@ -13,6 +13,7 @@ export default class ChatConnection{
      * @event nameError - when the username is taken or invalid
      * @event welcome - when the user has successfully connected. 
      * @event message - emitted when a message is received.  
+     * @event serverDisconnect -- emitted when the server disconnects the user
      */
 
     connect = (username) => {
@@ -22,6 +23,7 @@ export default class ChatConnection{
         this.socket.on('name-error',this.onNameError);
         this.socket.on('welcome',this.onWelcome);
         this.socket.on('message',this.onMessage);
+        this.socket.on('disconnect',this.onServerDisconnect);
 
     }
 

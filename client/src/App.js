@@ -24,6 +24,7 @@ class App extends React.Component {
     this.chatConnection.onNameError = this.handleNameError;
     this.chatConnection.onMessage = this.handleMessage;
     this.chatConnection.onWelcome = this.handleWelcome;
+    this.chatConnection.onServerDisconnect = this.handleServerDisconnect;
 
   }
   
@@ -88,6 +89,10 @@ class App extends React.Component {
 
   sendImage = imageBuffer => {
     this.socket.emit('image',{senderUsername: this.state.username, payload: imageBuffer});
+  }
+
+  handleServerDisconnect = ()=>{
+    this.setState({online:false,texts:[]});
   }
 }
 
