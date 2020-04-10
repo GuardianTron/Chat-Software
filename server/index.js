@@ -6,6 +6,7 @@ const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
 const {Users, UserExistsError, InvalidUserError} = require("./models/Users");
+const {ImageModel} = require("./models/Image");
 const {Message,ChatMessage,ImageMessage} = require("./message");
 
 const users = new Users();
@@ -41,11 +42,25 @@ io.on('connection', socket =>{
             console.log(username);
             data.senderUsername = username;
             data.fromSocketId = socket.id;
-            let message = {};
-            if(data.type == Message.IMAGE) message = new ImageMessage(data);
-            else message = new ChatMessage(data);
-            console.log(message,message.toJSON());
-            io.sockets.emit(Message.MESSAGE, message.toJSON());
+            if(data.type == Message.IMAGE){
+                ImageModel.bufferToPng(data.payload.buffer)
+                .then(
+                    (buffer) =>{
+                        data.payload.type="image/png";
+                        data.payload.buffer = buffer;
+                        const message = new ImageMessage(data);
+                        io.sockets.emit(Message.MESSAGE,message.toJSON());
+                    }
+                ).catch(
+                    (e) => console.log(e.message)
+                );
+                
+            }
+            else{
+                let message = new ChatMessage(data);
+                console.log(message,message.toJSON());
+                io.sockets.emit(Message.MESSAGE, message.toJSON());
+            }
         }
         catch(e){
             console.log(e.message);
