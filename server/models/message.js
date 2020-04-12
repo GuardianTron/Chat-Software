@@ -54,6 +54,7 @@ Message.IMAGE = "image";
 Message.LOGIN = "login";
 Message.DISCONNECT = "disconnect";
 Message.USER_ERROR = "user-error";
+Message.SERVER_ANNOUNCEMENT = "server-announcement";
 
 class ChatMessage extends Message{
     constructor(data){
@@ -74,6 +75,24 @@ class UserErrorMessage extends Message{
     }
 
 }
+
+
+
+class ServerMessage extends Message{
+    constructor(type,data){
+        data.senderUsername = null;
+        data.fromSocketId = null;
+        super(type,data);
+    }
+}
+
+class ServerAnnouncementMessage extends ServerMessage{
+    constructor(data){
+        super(Message.SERVER_ANNOUNCEMENT,data);
+    }
+}
+
 module.exports.Message = Message;
 module.exports.ChatMessage = ChatMessage;
 module.exports.ImageMessage = ImageMessage;
+module.exports.ServerAnnouncementMessage = ServerAnnouncementMessage;

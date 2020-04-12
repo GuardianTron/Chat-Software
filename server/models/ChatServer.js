@@ -1,4 +1,5 @@
 const {Users} = require("./Users");
+const {ServerAnnouncementMessage} = require("./message");
 
 
 const LOGIN = "login";
@@ -95,7 +96,7 @@ class ChatServer{
     }
 
     sendServerAnnouncement = (message) => {
-        this.io.sockets.emit(SERVER_ANNOUNCEMENT,{payload: message});
+        this.io.sockets.emit(CHAT_MESSAGE,(new ServerAnnouncementMessage({payload: message})).toJSON());
     }
 
     sendMessageToChatroom(data){
