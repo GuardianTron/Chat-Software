@@ -17,6 +17,7 @@ class ChatServer{
         this.io = io;
         this.users = new Users();
         this.messageHandlers =  {};
+        this.initialized = false;
     }
 
     attachMessageHandler = (messageType,handler) => {
@@ -26,6 +27,9 @@ class ChatServer{
     }
 
     init = ()=>{
+        //only set up call backs for first initializton
+        if(this.initialized) return;
+        this.initialized = true;
         this.io.on("connection", socket =>{
             socket.on(LOGIN,this.login(socket));
             socket.on(CHAT_MESSAGE, this.sendMessages(socket) );
