@@ -19,7 +19,7 @@ export default class ChatForm extends Component{
         <ul className="message-window" ref={this.messageWindowRef}>
             {messages.map((message,index) =>{
                 console.log(message);
-                return <li key={message.time}>{message.senderUsername}: <Message content={message}/></li>;
+                return <li key={message.time}><Message content={message}/></li>;
             })
         }
             
@@ -74,10 +74,13 @@ export default class ChatForm extends Component{
 
 const Message = ({content}) =>{
     if(content.type == "image"){
-        return <DownloadedImage buffer={content.payload.buffer} type={content.payload.type} />
+        return <>{content.senderUsername}:<DownloadedImage buffer={content.payload.buffer} type={content.payload.type} /></>;
+    }
+    else if(content.type == "server-announcement"){
+        return <div className="server-announcement">{content.payload}</div>
     }
     else{
-        return <ParsedMessage content={content.payload} />; 
+        return <>{content.senderUsername}: <ParsedMessage content={content.payload} /></>; 
     }
 }
 
