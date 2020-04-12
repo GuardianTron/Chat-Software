@@ -53,8 +53,7 @@ Message.WELCOME = "welcome";
 Message.IMAGE = "image";
 Message.LOGIN = "login";
 Message.DISCONNECT = "disconnect";
-Message.NAME_ERROR = "name-error";
-Message.IMAGE_ERROR = "image-error";
+Message.USER_ERROR = "user-error";
 
 class ChatMessage extends Message{
     constructor(data){
@@ -69,6 +68,12 @@ class ImageMessage extends Message{
     }
 }
 
+class UserErrorMessage extends Message{
+    constructor(data){
+        super(Message.USER_ERROR,data);
+    }
+
+}
 module.exports.Message = Message;
 module.exports.ChatMessage = ChatMessage;
 module.exports.ImageMessage = ImageMessage;
