@@ -18,8 +18,7 @@ class App extends React.Component {
     texts: []
   };
 
-  constructor(props){
-    super(props);
+  componentWillMount(){
     this.chatConnection = new ChatConnection("http://localhost:3001");
     this.chatConnection.onNameError = this.handleNameError;
     this.chatConnection.onMessage = this.handleMessage;
@@ -41,6 +40,7 @@ class App extends React.Component {
 
   componentWillUnmount(){
     this.chatConnection.disconnect();
+    delete this.chatConnection;
   }
   /*
   connect = (username) =>{
@@ -78,7 +78,7 @@ class App extends React.Component {
   }
 
   handleMessage = (data) => {
-    console.log("received",data);
+    console.log("received");
     this.setState({texts:[...this.state.texts,data]});
   }
 

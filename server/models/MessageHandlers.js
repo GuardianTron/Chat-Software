@@ -8,7 +8,7 @@ class MessageHandler{
         this.chatServer = chatServer;
     }
 
-    handle = (data) => {
+    handle(data){
         if(!this.chatServer){
             throw new Error("Must attach a valid instance of ChatServer");
         }
@@ -24,8 +24,8 @@ class ChatMessageHandler extends MessageHandler{
         this.maxCharLength = maxLength;
     }
 
-    handle = (data)=>{
-        //super.handle(data);
+    handle(data){
+        super.handle(data);
         if(data.payload.length > this.maxCharLength){
             data.payload = `Messages must be no more than ${this.maxCharLength} characters in length.`;
             this.chatServer.sendErrorToUser(data.fromSocketId,(new  UserErrorMessage(data)).toJSON());
@@ -46,7 +46,7 @@ class ImageMessageHandler extends MessageHandler{
         this.maxSizeBytes = maxSizeBytes;
     }
 
-    handle = (data) =>{
+    handle(data){
         super.handle(data);
         try{
             const processor = new ImageModel(data.payload.buffer,this.maxWidth,this.maxHeight,this.maxSizeBytes);
@@ -54,7 +54,7 @@ class ImageMessageHandler extends MessageHandler{
             .then((buffer) =>{
                 data.payload.buffer = buffer;
                 data.type = "image/png";
-                this.chatServer.sendMessageToChatRoom((new ImageMessage(data)).toJSON());
+                this.chatServer.sendMessageToChatroom((new ImageMessage(data)).toJSON());
             })
             .catch((error) => this.chatServer.sendErrorToUser(data.fromSocketId,error.message));
 
