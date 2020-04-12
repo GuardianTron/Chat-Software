@@ -17,13 +17,19 @@ export default class ChatConnection{
      */
 
     connect = (username) => {
+        //prevent repeated socket generation
+        if(!this.socket){
+            this.socket =  openSocket(this.url);
+            this.socket.on('name-error',this.onNameError);
+            this.socket.on('welcome',this.onWelcome);
+            this.socket.on('message',this.onMessage);
+            this.socket.on('disconnect',this.onServerDisconnect);
+        }
+
         this.username = username;
-        this.socket =  openSocket(this.url);
+        
         this.socket.emit('login',{senderUsername: username});
-        this.socket.on('name-error',this.onNameError);
-        this.socket.on('welcome',this.onWelcome);
-        this.socket.on('message',this.onMessage);
-        this.socket.on('disconnect',this.onServerDisconnect);
+        
         
 
     }

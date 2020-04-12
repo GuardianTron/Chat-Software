@@ -40,7 +40,6 @@ class App extends React.Component {
 
   componentWillUnmount(){
     this.chatConnection.disconnect();
-    delete this.chatConnection;
   }
   /*
   connect = (username) =>{
