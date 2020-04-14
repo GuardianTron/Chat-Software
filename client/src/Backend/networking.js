@@ -17,14 +17,26 @@ export default class ChatConnection{
      */
 
     connect = (username) => {
-        //prevent repeated socket generation
-        if(!this.socket){
-            this.socket =  openSocket(this.url);
-            this.socket.on('user-error',this.onUserError);
-            this.socket.on('welcome',this.onWelcome);
-            this.socket.on('message',this.onMessage);
-            this.socket.on('disconnect',this.onServerDisconnect);
+        
+        /*
+         * Prevent event handlers from 
+         * being added multiple times in event
+         * of reconnection
+         */
+
+        if(this.socket){
+            this.socket.removeAllListeners('user-error');
+            this.socket.removeAllListeners('welcome');
+            this.socket.removeAllListeners('message');
+            this.socket.removeAllListeners('disconnect');
         }
+        
+        this.socket =  openSocket(this.url);    
+        this.socket.on('user-error',this.onUserError);
+        this.socket.on('welcome',this.onWelcome);
+        this.socket.on('message',this.onMessage);
+        this.socket.on('disconnect',this.onServerDisconnect);
+        
 
         this.username = username;
         
