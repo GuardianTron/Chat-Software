@@ -40,10 +40,11 @@
 .message-window{
   height: 400px;
   margin: 10px;
-  border: 2px solid black;
+  border: 5px solid black;
   padding: 0;
   overflow: auto;
   text-align: left;
+  border-radius: 5px;
 }
 
 .message-window li:nth-child(odd){
@@ -53,11 +54,14 @@
 .message-window li{
   list-style: none;
   padding: 5px 10px;
+
 }
 
 .server-announcement{
   text-align: center;
   font-weight: bold;
 }
+
+
 
 
