@@ -87,7 +87,7 @@ const Message = ({content}) =>{
 const DownloadedImage = props =>{
     const {buffer,type} = props;
     const blob = new Blob([new Uint8Array(buffer)],{type: type});
-    return <img src={URL.createObjectURL(blob)} />;
+    return <img src={URL.createObjectURL(blob)}/>;
 }
 
 const ParsedMessage = ({content}) =>{

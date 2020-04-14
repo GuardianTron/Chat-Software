@@ -18,7 +18,8 @@ class App extends React.Component {
     texts: []
   };
 
-  componentWillMount(){
+  constructor(props){
+    super(props);
     this.chatConnection = new ChatConnection("http://localhost:3001");
     this.chatConnection.onUserError = this.handleUserError;
     this.chatConnection.onMessage = this.handleMessage;
