@@ -1,3 +1,4 @@
+const {UserError} = require('./error');
 class Users{
 
     usernameRE = /^[\w!.\?\~][\w!.\?\~@ ]{0,30}[\w!.\?\~]$/i
@@ -55,21 +56,21 @@ class Users{
     }
 }
 
-class UserExistsError extends Error{
+class UserExistsError extends UserError{
 
     constructor(username){
         super(`Username ${username} has been taken.`);
     }
 }
 
-class InvalidUserError extends Error{
+class InvalidUserError extends UserError{
 
     constructor(username){
         super(`Username: ${username} is invalid.`);
     }
 }
 
-class InvalidSocketIdError extends Error{
+class InvalidSocketIdError extends UserError{
     
     constructor(socketId){
         super(`Socket:  ${socketId} has no user associated with it.`);

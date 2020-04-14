@@ -1,10 +1,12 @@
+
 const sharp = require('sharp');
+const {UserError} = require("./error");
 
 class ImageModel{
 
     constructor(buffer,maxWidth = 250, maxHeight = 250, maxSizeBytes = 50 * Math.pow(2,20) ){
         if(buffer.byteLength > maxSizeBytes){
-            throw new Error("Provided image is too large.");
+            throw new UserError("Provided image is too large.");
         }
         this.image = sharp(buffer);
         this.maxWidth = maxWidth;

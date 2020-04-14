@@ -1,4 +1,5 @@
 const {Users} = require("./Users");
+const {UserError} = require("./error");
 const {ServerAnnouncementMessage} = require("./message");
 
 
@@ -49,8 +50,8 @@ class ChatServer{
                 
             }
             catch(error){
-                console.log(error.lineNumber,error.message);
-                this.sendErrorToUser(socket.id,{payload: error.message});
+                if(error instanceof UserError) this.sendErrorToUser(socket.id,{payload: error.message});
+                this.handleError(error);
                 socket.disconnect();
             
             }
@@ -64,8 +65,8 @@ class ChatServer{
                 this.users.removeUserBySocketId(socket.id);
                 this.sendServerAnnouncement(`${username} has left the chat.`);
             }
-            catch(e){
-                console.log(e.message);
+            catch(error){
+                this.handleError(error);
             }
         };
     }
@@ -85,7 +86,7 @@ class ChatServer{
               
             }
             catch(e){
-                console.log(e.message);
+                this.handleError(error);
                 socket.disconnect(true);
             }
         };
@@ -107,6 +108,10 @@ class ChatServer{
     sendErrorToUser(socketId,message){
         console.log(message);
         this.io.to(socketId).emit(ERROR_MESSAGE,message);
+    }
+
+    handleError(error){
+        console.log(error.message);
     }
 
     

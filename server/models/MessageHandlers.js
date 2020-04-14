@@ -1,5 +1,6 @@
 const {ChatMessage, ImageMessage,UserErrorMessage} = require("./message");
 const {ImageModel} = require("./Image");
+const {UserError} = require("./error");
 
 class MessageHandler{
 
@@ -56,11 +57,18 @@ class ImageMessageHandler extends MessageHandler{
                 data.type = "image/png";
                 this.chatServer.sendMessageToChatroom((new ImageMessage(data)).toJSON());
             })
-            .catch((error) => this.chatServer.sendErrorToUser(data.fromSocketId,error.message));
+            .catch((error) => {
+                if(error instanceof UserError)
+                    this.chatServer.sendErrorToUser(data.fromSocketId,error.message);
+                this.chatServer.handleError(error);
+            
+            });
 
         }
-        catch(e){
-            this.chatServer.sendErrorToUser(data.fromSocketId,(new UserErrorMessage(e.message).toJSON()));
+        catch(error){
+            
+            if(error instanceof UserError) this.chatServer.sendErrorToUser(data.fromSocketId,(new UserErrorMessage(error.message).toJSON()));
+            this.chatServer.handleError(error);
         }
     }
 }
