@@ -73,10 +73,10 @@ export default class ChatForm extends Component{
 }
 
 const Message = ({content}) =>{
-    if(content.type == "image"){
+    if(content.type === "image"){
         return <>{content.senderUsername}:<DownloadedImage buffer={content.payload.buffer} type={content.payload.type} /></>;
     }
-    else if(content.type == "server-announcement"){
+    else if(content.type === "server-announcement"){
         return <div className="server-announcement">{content.payload}</div>
     }
     else{

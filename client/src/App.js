@@ -20,7 +20,7 @@ class App extends React.Component {
 
   componentWillMount(){
     this.chatConnection = new ChatConnection("http://localhost:3001");
-    this.chatConnection.onNameError = this.handleNameError;
+    this.chatConnection.onUserError = this.handleUserError;
     this.chatConnection.onMessage = this.handleMessage;
     this.chatConnection.onWelcome = this.handleWelcome;
     this.chatConnection.onServerDisconnect = this.handleServerDisconnect;
@@ -72,7 +72,7 @@ class App extends React.Component {
   }
   */
 
-  handleNameError = (data) => {
+  handleUserError = (data) => {
     this.setState({message: data.payload});
   }
 

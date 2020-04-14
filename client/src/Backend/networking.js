@@ -10,17 +10,17 @@ export default class ChatConnection{
      * Establishes a connection to the server and logs
      * in the user.
      * @param {String} username
-     * @event nameError - when the username is taken or invalid
+     * @event UserError - when the username is taken or invalid
      * @event welcome - when the user has successfully connected. 
      * @event message - emitted when a message is received.  
-     * @event serverDisconnect -- emitted when the server disconnects the user
+     * @event ServerDisconnect -- emitted when the server disconnects the user
      */
 
     connect = (username) => {
         //prevent repeated socket generation
         if(!this.socket){
             this.socket =  openSocket(this.url);
-            this.socket.on('name-error',this.onNameError);
+            this.socket.on('user-error',this.onUserError);
             this.socket.on('welcome',this.onWelcome);
             this.socket.on('message',this.onMessage);
             this.socket.on('disconnect',this.onServerDisconnect);

@@ -10,7 +10,7 @@ const UPDATE_USER_LIST = "update-user-list";
 const SERVER_ANNOUNCEMENT = "server-announcement";
 const WELCOME = "welcome";
 
-const ERROR_MESSAGE = "name-error";
+const ERROR_MESSAGE = "user-error";
 
 
 class ChatServer{
