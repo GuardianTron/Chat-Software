@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-export default class ChatForm extends Component{
+export default class MessageWindow extends Component{
 
     state = {
         message: ''
@@ -15,7 +15,7 @@ export default class ChatForm extends Component{
         const messages = this.props.messages;
         
         
-        return <div className="chat-room">
+        return <div>
         <ul className="message-window" ref={this.messageWindowRef}>
             {messages.map((message,index) =>{
                 console.log(message);
