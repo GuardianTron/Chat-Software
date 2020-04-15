@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  display: flex;
 }
 
 .App-logo {
@@ -35,6 +36,19 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.chat-room{
+  flex-basis: 75%;
+}
+
+.user-list{
+  flex-basis: 20%;
+  list-style: none;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
+  background-color: gray;
 }
 
 .message-window{

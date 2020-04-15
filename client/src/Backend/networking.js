@@ -12,7 +12,8 @@ export default class ChatConnection{
      * @param {String} username
      * @event UserError - when the username is taken or invalid
      * @event welcome - when the user has successfully connected. 
-     * @event message - emitted when a message is received.  
+     * @event message - emitted when a message is received. 
+     * @event UpdateUserList --emitted when users enter or leave the chat 
      * @event ServerDisconnect -- emitted when the server disconnects the user
      */
 
@@ -28,6 +29,7 @@ export default class ChatConnection{
             this.socket.removeAllListeners('user-error');
             this.socket.removeAllListeners('welcome');
             this.socket.removeAllListeners('message');
+            this.socket.removeAllListeners('update-user-list');
             this.socket.removeAllListeners('disconnect');
         }
         
@@ -35,6 +37,7 @@ export default class ChatConnection{
         this.socket.on('user-error',this.onUserError);
         this.socket.on('welcome',this.onWelcome);
         this.socket.on('message',this.onMessage);
+        this.socket.on('update-user-list',this.onUpdateUserList);
         this.socket.on('disconnect',this.onServerDisconnect);
         
 

@@ -15,7 +15,7 @@ export default class ChatForm extends Component{
         const messages = this.props.messages;
         
         
-        return <>
+        return <div className="chat-room">
         <ul className="message-window" ref={this.messageWindowRef}>
             {messages.map((message,index) =>{
                 console.log(message);
@@ -34,7 +34,7 @@ export default class ChatForm extends Component{
                 <input type="file" onChange={this.onselectFile}/>
             </p>
         </form>
-        </>;
+        </div>;
     }
 
     onchange = event =>{

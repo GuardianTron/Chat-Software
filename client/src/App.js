@@ -4,6 +4,7 @@ import './App.css';
 
 import LoginForm from "./Components/LoginForm";
 import ChatRoom from "./Components/ChatRoom";
+import UserList from "./Components/UserList";
 
 import ChatConnection from "./Backend/networking";
 
@@ -15,6 +16,7 @@ class App extends React.Component {
     username: '',
     online: false,
     message: '',
+    users: {},
     texts: []
   };
 
@@ -24,6 +26,7 @@ class App extends React.Component {
     this.chatConnection.onUserError = this.handleUserError;
     this.chatConnection.onMessage = this.handleMessage;
     this.chatConnection.onWelcome = this.handleWelcome;
+    this.chatConnection.onUpdateUserList = this.handleUpdateUserList;
     this.chatConnection.onServerDisconnect = this.handleServerDisconnect;
 
   }
@@ -32,7 +35,7 @@ class App extends React.Component {
     return (
       <div className="App">
         {this.state.online?
-         <ChatRoom messageHandler={this.chatConnection.sendChatText} imageHandler={this.chatConnection.sendChatImage} messages={this.state.texts}/>:
+         <><UserList userList={this.state.users} /><ChatRoom messageHandler={this.chatConnection.sendChatText} imageHandler={this.chatConnection.sendChatImage} messages={this.state.texts}/></>:
          <LoginForm handleConnection={this.chatConnection.connect} message={this.state.message}/>
          }
       </div>
@@ -80,6 +83,10 @@ class App extends React.Component {
   handleMessage = (data) => {
     console.log("received");
     this.setState({texts:[...this.state.texts,data]});
+  }
+
+  handleUpdateUserList = (data) =>{
+    this.setState({users: data.payload});
   }
 
   handleWelcome = (data) => {

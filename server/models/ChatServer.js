@@ -93,7 +93,7 @@ class ChatServer{
     }
 
     sendUpdatedUserList = ()=>{
-        this.io.sockets.emit(UPDATE_USER_LIST,this.users.getAllUsers());
+        this.io.sockets.emit(UPDATE_USER_LIST,{payload:this.users.getAllUsers()});
     }
 
     sendServerAnnouncement = (message) => {
