@@ -37,8 +37,11 @@
     transform: rotate(360deg);
   }
 }
-
 .chat-room{
+  display: flex;
+}
+
+.chat-room .message-window{
   flex-basis: 75%;
 }
 

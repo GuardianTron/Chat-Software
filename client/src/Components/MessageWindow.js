@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-export default class MessageWindow extends Component{
+class MessageWindow extends Component{
 
     state = {
         message: ''
@@ -71,6 +71,8 @@ export default class MessageWindow extends Component{
 
 
 }
+
+export default MessageWindow;
 
 const Message = ({content}) =>{
     if(content.type === "image"){

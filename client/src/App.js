@@ -35,7 +35,7 @@ class App extends React.Component {
     return (
       <div className="App">
         {this.state.online?
-         <><UserList userList={this.state.users} /><ChatRoom messageHandler={this.chatConnection.sendChatText} imageHandler={this.chatConnection.sendChatImage} messages={this.state.texts}/></>:
+         <ChatRoom userList={this.state.users} messageHandler={this.chatConnection.sendChatText} imageHandler={this.chatConnection.sendChatImage} messages={this.state.texts}/>:
          <LoginForm handleConnection={this.chatConnection.connect} message={this.state.message}/>
          }
       </div>
