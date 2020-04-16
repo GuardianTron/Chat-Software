@@ -40,7 +40,8 @@
 .chat-room{
   display: flex;
   width: 80%;
-  height: 600px;
+  min-height: 400px;
+  height: 95vh;
   
 }
 
