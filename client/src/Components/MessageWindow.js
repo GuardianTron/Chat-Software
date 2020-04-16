@@ -15,8 +15,8 @@ class MessageWindow extends Component{
         const messages = this.props.messages;
         
         
-        return <div>
-        <ul className="message-window" ref={this.messageWindowRef}>
+        return <div className="message-window">
+        <ul  ref={this.messageWindowRef}>
             {messages.map((message,index) =>{
                 console.log(message);
                 return <li key={message.time}><Message content={message}/></li>;
