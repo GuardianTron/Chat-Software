@@ -1,6 +1,10 @@
+
 .App {
   text-align: center;
   display: flex;
+  height: 100vh;
+  width: 100vw;
+
 }
 
 .App-logo {
@@ -62,8 +66,8 @@
   background-color: gray;
 }
 
-.message-window > ul{
-  flex-grow: 20;
+.message-window  ul{
+  flex: 5 20;
   flex-wrap: wrap;
   margin: 10px;
   border: 5px solid black;
@@ -76,8 +80,24 @@
 
 
 
-.message-window > form{
+.message-window  form{
   flex-grow: 1;
+}
+
+.private-message-window{
+  display: flex;
+  flex-direction: column;
+  height: 200px;
+  border: solid black 2px;
+  top: 20px;
+  left: 500px;
+  position: absolute;
+}
+
+private-message-window  header{
+  flex: 2;
+  background-color: slategray;
+
 }
 
 .message-window li:nth-child(odd){

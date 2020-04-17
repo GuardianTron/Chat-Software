@@ -4,7 +4,7 @@ import './App.css';
 
 import LoginForm from "./Components/LoginForm";
 import ChatRoom from "./Components/ChatRoom";
-import UserList from "./Components/UserList";
+import PrivateMessageWindow from "./Components/PrivateMessageWindow"; 
 
 import ChatConnection from "./Backend/networking";
 
@@ -38,6 +38,7 @@ class App extends React.Component {
          <ChatRoom userList={this.state.users} messageHandler={this.chatConnection.sendChatText} imageHandler={this.chatConnection.sendChatImage} messages={this.state.texts}/>:
          <LoginForm handleConnection={this.chatConnection.connect} message={this.state.message}/>
          }
+
       </div>
     );
   }
