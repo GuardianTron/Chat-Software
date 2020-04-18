@@ -18,18 +18,31 @@ class ChatServer{
     constructor(io){
         this.io = io;
         this.users = new Users();
-        this.messageHandlers =  {};
+        this.messageRouters =  {};
+        this.messageFilters = {};
         this.initialized = false;
     }
 
-    attachMessageHandler = (messageType,handler) => {
-        handler.attachServer(this);
-        this.messageHandlers[messageType] = handler;
+    attachMessageRouter = (handler, messageType) => {
+        this.messageRouters[messageType] = handler;
 
     }
 
+    attachFilter = (filter, messageTypes = "all")=>{
+        if(!messageType instanceof Array){
+            messageTypes = [messageTypes];
+        }
+        for(let messageType in messageTypes){
+            if(!this.messageFilters.hasOwnProperty(messageType)){
+                this.messageFilters[messageType] = [];
+             }
+            this.messageFilters[messageType].push(filter);
+        }
+    }
+    
+
     init = ()=>{
-        //only set up call backs for first initializton
+        //only set up call backs for first initialization
         if(this.initialized) return;
         this.initialized = true;
         this.io.on("connection", socket =>{
@@ -71,17 +84,25 @@ class ChatServer{
         };
     }
 
-    sendMessages = (socket)=>{
-        return (data) =>{
-            if(this.messageHandlers.length === 0){
-                throw new Error("Must attach message handler before messages can be send.");
+    sendMessages = (socket) =>{
+        return async (data) =>{
+            if(this.messageRouters.length === 0){
+                throw new Error("Must attach message router before messages can be send.");
             }
             try{
                const username = this.users.getUsernameBySocketId(socket.id);
                data.senderUsername = username;
                data.fromSocketId = socket.id;
-               if(this.messageHandlers[data.type]){
-                   this.messageHandlers[data.type].handle(data);
+               //handle generic message filters
+               await (Promise.all(this.messageFilters['all'].map(async filter =>{return filter.filter(data)})));
+
+               //handle message filers for specified type
+               if(this.messageFilters[data.type]){
+                   await (Promise.all(this.messageFilters[data.type].map(async filter =>{return filter.filter(data)})));
+               }
+
+               if(this.messageRouters[data.type]){
+                   this.messageRouters[data.type].handle(data);
                }
               
             }
