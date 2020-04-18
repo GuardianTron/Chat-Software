@@ -107,8 +107,15 @@ class ChatServer{
                }
               
             }
-            catch(e){
-                
+            catch(error){
+                if(error instanceof UserError){
+                    const message = {};
+                    message.payload = error.message;
+                    if(data.toSocketId){
+                        message.toSocketId = data.toSocketId;
+                    }
+                    this.sendErrorToUser(socket.id,message);
+                }
                 this.handleError(error);
                 socket.disconnect(true);
             }
