@@ -49,10 +49,22 @@ class ImageMessageFilter extends MessageFilter{
 
     async filter(data){
         super.filter(data);
-        const processor = new ImageModel(data.payload.buffer,this.maxWidth,this.maxHeight,this.maxSizeBytes);
-        const buffer = await processor.toPng()
-        data.payload.buffer = buffer;
-        data.payload.type = "image/png";
+        try{
+            const processor = new ImageModel(data.payload.buffer,this.maxWidth,this.maxHeight,this.maxSizeBytes);
+            const buffer = await processor.toPng()
+            data.payload.buffer = buffer;
+            data.payload.type = "image/png";
+           
+        }
+        catch(error){
+            //make sure error is reported back to user
+            if(!(error instanceof UserError) ){
+                throw new UserError('The submitted image format is not support.');
+            }
+            else{
+                throw error;
+            }
+        }
     }
     
 }
