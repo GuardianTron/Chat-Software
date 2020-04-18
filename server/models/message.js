@@ -130,3 +130,6 @@ class PrivateImageMessage extends PrivateMessage{
         super(PrivateMessage.PrivateImageMessage);
     }
 }
+
+module.exports.PrivateTextMessage = PrivateTextMessage;
+module.exports.PrivateImageMessage = PrivateImageMessage;

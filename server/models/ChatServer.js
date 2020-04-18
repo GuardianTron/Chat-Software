@@ -29,6 +29,7 @@ class ChatServer{
     }
 
     attachFilter = (filter, messageTypes = "all")=>{
+        filter.attachServer(this);
         if(!messageType instanceof Array){
             messageTypes = [messageTypes];
         }
@@ -107,6 +108,7 @@ class ChatServer{
               
             }
             catch(e){
+                
                 this.handleError(error);
                 socket.disconnect(true);
             }
