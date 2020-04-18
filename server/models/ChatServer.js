@@ -117,7 +117,6 @@ class ChatServer{
                     this.sendErrorToUser(socket.id,message);
                 }
                 this.handleError(error);
-                socket.disconnect(true);
             }
         };
     }
