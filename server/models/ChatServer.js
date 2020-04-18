@@ -102,7 +102,7 @@ class ChatServer{
                }
 
                if(this.messageRouters[data.type]){
-                   this.messageRouters[data.type].handle(data);
+                   this.messageRouters[data.type](this,data);
                }
               
             }
