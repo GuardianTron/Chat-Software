@@ -29,7 +29,7 @@ class TextMessageFilter extends MessageFilter{
     }
 
     filter(data){
-        super.handle(data);
+        super.filter(data);
         if(data.payload.length > this.maxCharLength){
            throw new UserError(`Messages must be no more than ${this.maxCharLength} characters in length.`);
         }
@@ -52,13 +52,13 @@ class ImageMessageFilter extends MessageFilter{
         const processor = new ImageModel(data.payload.buffer,this.maxWidth,this.maxHeight,this.maxSizeBytes);
         const buffer = await processor.toPng()
         data.payload.buffer = buffer;
-        data.type = "image/png";
+        data.payload.type = "image/png";
     }
     
 }
 
 
 
-module.exports.MessageFilter = MessageHandler;
+module.exports.MessageFilter = MessageFilter;
 module.exports.TextMessageFilter = TextMessageFilter;
-module.exports.ImageMessageHandler = ImageMessageFilter;
+module.exports.ImageMessageFilter = ImageMessageFilter;

@@ -30,16 +30,22 @@ class ChatServer{
 
     attachFilter = (filter, messageTypes = "all")=>{
         filter.attachServer(this);
-        if(!messageType instanceof Array){
+        if(typeof(messageTypes) !== "Array"){
             messageTypes = [messageTypes];
         }
-        for(let messageType in messageTypes){
+       
+    
+
+        for(let messageType of messageTypes){
+            
             if(!this.messageFilters.hasOwnProperty(messageType)){
                 this.messageFilters[messageType] = [];
              }
             this.messageFilters[messageType].push(filter);
+            
         }
     }
+
     
 
     init = ()=>{
@@ -94,8 +100,10 @@ class ChatServer{
                const username = this.users.getUsernameBySocketId(socket.id);
                data.senderUsername = username;
                data.fromSocketId = socket.id;
-               //handle generic message filters
-               await (Promise.all(this.messageFilters['all'].map(async filter =>{return filter.filter(data)})));
+               //handle generic message filters if they exist
+               if(this.messageFilters.hasOwnProperty('all') && this.messageFilters['all'] > 0){
+                    await (Promise.all(this.messageFilters['all'].map(async filter =>{return filter.filter(data)})));
+               }
 
                //handle message filers for specified type
                if(this.messageFilters[data.type]){
@@ -105,6 +113,7 @@ class ChatServer{
                if(this.messageRouters[data.type]){
                    this.messageRouters[data.type](this,data);
                }
+               else throw new Error(`${data.type} does not have a registered router.`);
               
             }
             catch(error){
@@ -140,7 +149,7 @@ class ChatServer{
     }
 
     handleError(error){
-        console.log(error.message);
+        console.log(error);
     }
 
     
