@@ -48,6 +48,7 @@ class Message{
 
 }
 
+
 Message.MESSAGE = 'message';
 Message.WELCOME = "welcome";
 Message.IMAGE = "image";
@@ -96,3 +97,36 @@ module.exports.Message = Message;
 module.exports.ChatMessage = ChatMessage;
 module.exports.ImageMessage = ImageMessage;
 module.exports.ServerAnnouncementMessage = ServerAnnouncementMessage;
+
+class PrivateMessage extends Message{
+     
+    constructor(type,data){
+        super(type,data);
+        this._toSocketId;
+    }
+
+    get toSocketId(){
+        return this._toSocketId;
+    }
+
+    get toJSON(){
+        const json = super.getJSON();
+        json.toSocketId = this.toSocketId;
+        return json;
+    }
+}
+
+PrivateMessage.MESSAGE = "private-message";
+PrivateMessage.IMAGE = "private-image";
+
+class PrivateTextMessage extends PrivateMessage{
+    constructor(data){
+        super(PrivateMessage.MESSAGE,data);
+    }
+}
+
+class PrivateImageMessage extends PrivateMessage{
+    constructor(data){
+        super(PrivateMessage.PrivateImageMessage);
+    }
+}
