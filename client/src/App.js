@@ -46,36 +46,6 @@ class App extends React.Component {
   componentWillUnmount(){
     this.chatConnection.disconnect();
   }
-  /*
-  connect = (username) =>{
-    this.socket = openSocket("http://localhost:3001");
-    
-    const message = {senderUsername: username};
-    console.log(message);
-    this.socket.emit('login',message);
-    
-    this.socket.on('name-error',(data) =>{
-      this.setState({message: data.payload});
-    });
-
-    this.socket.on('message',data =>{
-      this.setState({texts:[...this.state.texts,data]});
-    });
-
-    this.socket.on('image',data =>{
-      console.log('image message',data);
-      this.setState({texts:[...this.state.texts,data]});
-    });
-
-    this.socket.on('welcome',(data)=>{
-      console.log(data);
-      this.setState({username: data.senderUsername, online: true});
-    
-    });
- 
-    
-  }
-  */
 
   handleUserError = (data) => {
     this.setState({message: data.payload});
