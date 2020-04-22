@@ -5,6 +5,7 @@ const {ServerAnnouncementMessage} = require("./message");
 
 const LOGIN = "login";
 const CHAT_MESSAGE = "message";
+const PRIVATE_MESSAGE = "private-message";
 const USER_DISCONNECT = "disconnect";
 const UPDATE_USER_LIST = "update-user-list";
 const SERVER_ANNOUNCEMENT = "server-announcement";
@@ -55,6 +56,7 @@ class ChatServer{
         this.io.on("connection", socket =>{
             socket.on(LOGIN,this.login(socket));
             socket.on(CHAT_MESSAGE, this.sendMessages(socket) );
+            socket.on(PRIVATE_MESSAGE,this.sendMessages(socket));
             socket.on(USER_DISCONNECT,this.userDisconnect(socket));
         });
     }
@@ -146,6 +148,10 @@ class ChatServer{
     sendErrorToUser(socketId,message){
         console.log(message);
         this.io.to(socketId).emit(ERROR_MESSAGE,message);
+    }
+
+    sendPrivateMessage(data){
+        this.io.to(data.toSocketId).emit(PRIVATE_MESSAGE,data);
     }
 
     handleError(error){

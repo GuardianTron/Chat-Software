@@ -5,9 +5,9 @@ app.use(cors());
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
-const {TextMessageFilter,ImageMessageFilter} = require("./models/MessageFilters");
-const {chatMessageRouter,imageMessageRouter} = require("./models/routers"); 
-const {Message} = require("./models/message");
+const {TextMessageFilter,ImageMessageFilter,PrivateMessageUserFilter} = require("./models/MessageFilters");
+const {chatMessageRouter,imageMessageRouter,privateImageMessageRouter,privateTextMessageRouter} = require("./models/routers"); 
+const {Message,PrivateMessage} = require("./models/message");
 const {ChatServer} = require("./models/ChatServer");
 
 
@@ -20,9 +20,12 @@ server.listen(process.env.CHAT_PORT || 3001);
 const chatServer = new ChatServer(io);
 chatServer.attachFilter(new TextMessageFilter(1000),Message.MESSAGE);
 chatServer.attachFilter(new ImageMessageFilter(250,250, 10 * Math.pow(2,20)),Message.IMAGE);
+chatServer.attachFilter(new PrivateMessageUserFilter(),[PrivateMessage.Message,PrivateMessage.IMAGE]);
 
 chatServer.attachMessageRouter(chatMessageRouter,Message.MESSAGE);
 chatServer.attachMessageRouter(imageMessageRouter,Message.IMAGE);
+chatServer.attachMessageRouter(privateTextMessageRouter,PrivateMessage.MESSAGE);
+chatServer.attachMessageRouter(privateImageMessageRouter,PrivateMessage.IMAGE);
 chatServer.init();
 
 

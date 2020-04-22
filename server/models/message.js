@@ -103,15 +103,21 @@ class PrivateMessage extends Message{
     constructor(type,data){
         super(type,data);
         this._toSocketId;
+        this._toUsername;
+        
     }
 
     get toSocketId(){
         return this._toSocketId;
     }
+    get _toUsername(){
+        return this._toUsername;
+    }
 
     get toJSON(){
         const json = super.getJSON();
         json.toSocketId = this.toSocketId;
+        json._toUsername = this._toUsername;
         return json;
     }
 }
@@ -131,5 +137,6 @@ class PrivateImageMessage extends PrivateMessage{
     }
 }
 
+module.exports.PrivateMessage = PrivateMessage;
 module.exports.PrivateTextMessage = PrivateTextMessage;
 module.exports.PrivateImageMessage = PrivateImageMessage;

@@ -70,7 +70,37 @@ class ImageMessageFilter extends MessageFilter{
 }
 
 
+/**
+ * @class PrivateMessageUserFilter
+ * Makes sure that the receiving user has a valid
+ * socket and that the username matches the provided socket id.
+ * Note: Socket id's and usernames are only valid during the receiving user's session.
+ * This is to prevent users from sending messages to logged off users by mistake,
+ * as well as to prevent new users who are using a prior username or socket from getting
+ * someone else' messages.
+ *  
+ */
+class PrivateMessageUserFilter extends MessageFilter{
+
+    filter(data){
+        super.filter (data);
+        try{
+            //makes sure username matches the socket
+            if(this.chatServer.users.getUsernameBySocketId(data.toSocketId) !== data.toUsername){
+                throw new UserError(`An error occurred finding ${data.toUsername}`);
+            }
+        }
+        catch(error){
+            //no socket id found
+            throw new UserError(`${$data.toUsername} appears to have logged off.`);
+        }
+    }
+
+
+}
+
 
 module.exports.MessageFilter = MessageFilter;
 module.exports.TextMessageFilter = TextMessageFilter;
 module.exports.ImageMessageFilter = ImageMessageFilter;
+module.exports.PrivateMessageUserFilter = PrivateMessageUserFilter;
