@@ -1,5 +1,6 @@
 import openSocket from "socket.io-client";
 
+
 export default class ChatConnection{
 
     constructor(url){
@@ -12,7 +13,8 @@ export default class ChatConnection{
      * @param {String} username
      * @event UserError - when the username is taken or invalid
      * @event welcome - when the user has successfully connected. 
-     * @event message - emitted when a message is received. 
+     * @event message - emitted when a message is received.
+     * @event privateMessage - emitted when a private message is received. 
      * @event UpdateUserList --emitted when users enter or leave the chat 
      * @event ServerDisconnect -- emitted when the server disconnects the user
      */
@@ -29,6 +31,7 @@ export default class ChatConnection{
             this.socket.removeAllListeners('user-error');
             this.socket.removeAllListeners('welcome');
             this.socket.removeAllListeners('message');
+            this.socket.removeAllListeners('private-message');
             this.socket.removeAllListeners('update-user-list');
             this.socket.removeAllListeners('disconnect');
         }
@@ -37,6 +40,7 @@ export default class ChatConnection{
         this.socket.on('user-error',this.onUserError);
         this.socket.on('welcome',this.onWelcome);
         this.socket.on('message',this.onMessage);
+        this.socket.on('private-message',this.onPrivateMessage);
         this.socket.on('update-user-list',this.onUpdateUserList);
         this.socket.on('disconnect',this.onServerDisconnect);
         
@@ -63,6 +67,12 @@ export default class ChatConnection{
         return message;
     }
 
+    __createBasicPrivateMessageObj(){
+        const message = this.__createBasicMessageObj();
+        message.toSocketId = null;
+        message.toUsername = null;
+    }
+
     /**
      * Sends a generic message object to the 
      * @param Obj message 
@@ -70,6 +80,10 @@ export default class ChatConnection{
 
     send = (message)=>{
         this.socket.emit('message',message);
+    }
+
+    sendPM = (message) =>{
+        this.socket.emit('private-message', message);
     }
 
     sendChatText = (message) => {
@@ -86,6 +100,23 @@ export default class ChatConnection{
         messageObj.payload = {mime: imageMimeType, buffer: imageBuffer};
         this.send(messageObj);
         
+    }
+
+    sendPrivateText = (message,toUsername,toSocketId) => {
+        const messageObj = this.__createBasicPrivateMessageObj();
+        messageObj.type = "private-message";
+        messageObj.toUsername = toUsername;
+        messageObj.toSocketId = toSocketId;
+        this.sendPM(messageObj);
+
+    }
+
+    sendPrivateImage(imageBuffer,imageMimeType,toUsername,toSocketId){
+        const messageObj = this.__createBasicPrivateMessageObj();
+        messageObj.type = 'private-image';
+        messageObj.toUsername = toUsername;
+        messageObj.toSocketId = toSocketId;
+        this.sendPM(messageObj);
     }
 
 

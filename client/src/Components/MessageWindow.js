@@ -66,7 +66,7 @@ class MessageWindow extends Component{
     }
 
     componentDidUpdate(prevProps,prevState,snapshot){
-        this.messageWindowRef.current.scrollTo(0,this.messageWindowRef.current.scrollHeight);
+        this.messageWindowRef.current.scrollTop = this.messageWindowRef.current.scrollHeight;
     }
 
 
@@ -89,7 +89,7 @@ const Message = ({content}) =>{
 const DownloadedImage = props =>{
     const {buffer,type} = props;
     const blob = new Blob([new Uint8Array(buffer)],{type: type});
-    return <img src={URL.createObjectURL(blob)}/>;
+    return <img src={URL.createObjectURL(blob)} />;
 }
 
 const ParsedMessage = ({content}) =>{
