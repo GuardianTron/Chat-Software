@@ -17,7 +17,8 @@ class App extends React.Component {
     online: false,
     message: '',
     users: {},
-    texts: []
+    texts: [],
+    pms: {}
   };
 
   constructor(props){
@@ -25,6 +26,7 @@ class App extends React.Component {
     this.chatConnection = new ChatConnection("http://localhost:3001");
     this.chatConnection.onUserError = this.handleUserError;
     this.chatConnection.onMessage = this.handleMessage;
+    this.chatConnection.onPrivateMessage = this.handlePrivateMessage;
     this.chatConnection.onWelcome = this.handleWelcome;
     this.chatConnection.onUpdateUserList = this.handleUpdateUserList;
     this.chatConnection.onServerDisconnect = this.handleServerDisconnect;
@@ -54,6 +56,16 @@ class App extends React.Component {
   handleMessage = (data) => {
     console.log("received");
     this.setState({texts:[...this.state.texts,data]});
+  }
+
+  handlePrivateMessage = (data) =>{
+    const pms = this.state.pms;
+    if(!pms.hasOwnProperty(data.fromSocketId)){
+      pms[data.fromSocketId] = [];
+    }
+    pms[data.fromSocketId].push(data);
+    this.setState({pms: pms});
+
   }
 
   handleUpdateUserList = (data) =>{
