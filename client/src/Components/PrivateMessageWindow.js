@@ -5,7 +5,9 @@ export default class PrivateMessageWindow extends Component {
 
     state = {
         beingDragged: false,
-        mouseOffset: {x: 0, y: 0}
+        mouseOffset: {x: 0, y: 0},
+        collapsed: false,
+        toUsername: ""
     }
 
     constructor(props) {

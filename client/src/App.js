@@ -37,8 +37,8 @@ class App extends React.Component {
     return (
       <div className="App">
         {this.state.online?
-         <ChatRoom userList={this.state.users} messageHandler={this.sendMessage} imageHandler={this.sendImage} messages={this.state.texts}/>:
-         <LoginForm handleConnection={this.connect} message={this.state.message}/>
+         <ChatRoom userList={this.state.users} messageHandler={this.sendMessage} imageHandler={this.sendImage} launchPMWindow={this.handleOpenPMWindow}messages={this.state.texts}/>:
+         <LoginForm handleConnection={this.connect} message={this.state.message} />
          }
 
       </div>
@@ -50,6 +50,7 @@ class App extends React.Component {
   }
 
   connect = (username) =>{
+    this.setState({username: username});
     this.chatConnection.connect(username);
   } 
 
@@ -71,7 +72,7 @@ class App extends React.Component {
   }
 
   handleWelcome = (data) => {
-    this.setState({username: data.senderUsername, online: true});
+    this.setState({online: true});
   }
 
   sendMessage = message => {
@@ -100,17 +101,49 @@ class App extends React.Component {
     this.__appendPrivateMessageToState(messageObj.toSocketId,messageObj);
   }
 
+  /**
+   * Handler is a factory to generate onclick functions 
+   * for each username to generate user windows.
+   * @param (Sting) username
+   * @return (Function)
+   */
+  handleOpenPMWindow = (username) => {
+
+    return () =>{
+      //don't pm yourself.
+      if(this.state.username === username) return; 
+      const toSocketId = this.state.users[username];
+      if(toSocketId){
+        //render function spawns windows based on pm threads,
+        //so adding one will spawn one for the 
+        this.__appendPrivateMessageToState(toSocketId);
+      }
+    }
+
+  }
+
   handleServerDisconnect = ()=>{
     this.setState({online:false,texts:[]});
   }
 
-  __appendPrivateMessageToState(destSocketId,data){
-     const pms = this.state.pms;
-     if(!pms.hasOwnProperty(destSocketId)){
-       pms[destSocketId] = [];
-     }
-     pms[destSocketId].push(data);
-     this.setState({pms: pms});
+  /**
+   * Saves messages for each user into it's own 
+   * private message array within the state.
+   * Creates new entry if one does not exist.
+   * Will add message data if any is given. 
+   * @param {String} destSocketId 
+   * @param {Object} data 
+   */
+
+  __appendPrivateMessageToState(destSocketId,data = null){
+    const pms = this.state.pms;
+    if(!pms.hasOwnProperty(destSocketId)){
+      pms[destSocketId] = [];
+    } 
+    if(data){  
+      pms[destSocketId].push(data);
+    }
+    this.setState({pms: pms});
   }
 }
 

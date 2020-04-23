@@ -66,6 +66,12 @@
   background-color: gray;
 }
 
+.user-list button{
+  display: inline;
+  background-color: inherit;
+  border: none;
+}
+
 .message-window  ul{
   flex: 5 20;
   flex-wrap: wrap;
