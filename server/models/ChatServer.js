@@ -86,6 +86,7 @@ class ChatServer{
                 const username = this.users.getUsernameBySocketId(socket.id);
                 this.users.removeUserBySocketId(socket.id);
                 this.sendServerAnnouncement(`${username} has left the chat.`);
+                this.sendUpdatedUserList();
             }
             catch(error){
                 this.handleError(error);
