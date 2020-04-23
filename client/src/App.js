@@ -59,13 +59,7 @@ class App extends React.Component {
   }
 
   handlePrivateMessage = (data) =>{
-    const pms = this.state.pms;
-    if(!pms.hasOwnProperty(data.fromSocketId)){
-      pms[data.fromSocketId] = [];
-    }
-    pms[data.fromSocketId].push(data);
-    this.setState({pms: pms});
-
+    this.__appendPrivateMessageToState(data.fromSocketId,data);
   }
 
   handleUpdateUserList = (data) =>{
@@ -85,8 +79,34 @@ class App extends React.Component {
     this.socket.emit('image',{senderUsername: this.state.username, payload: imageBuffer});
   }
 
+  sendPrivateMessage = (message,toUsername) =>{
+    const toSocketId = this.state.users[toUsername];
+    //user may have logged off.  Do not send
+    if(!toSocketId) return;
+    const messageObj = this.chatConnection.sendPrivateText(message,toUsername,toSocketId);
+    this.__appendPrivateMessageToState(messageObj.toSocketId,messageObj);
+
+  }
+
+  sendPrivateImage = (imageBuffer, imageType, toUsername) => {
+    const toSocketId = this.state.username[toUsername];
+    //user may have logged off.  Do not send
+    if(!toSocketId) return;
+    const messageObj = this.chatConnection.sendPrivateImage(imageBuffer,imageType,toUsername,toSocketId);
+    this.__appendPrivateMessageToState(messageObj.toSocketId,messageObj);
+  }
+
   handleServerDisconnect = ()=>{
     this.setState({online:false,texts:[]});
+  }
+
+  __appendPrivateMessageToState(destSocketId,data){
+     const pms = this.state.pms;
+     if(!pms.hasOwnProperty(destSocketId)){
+       pms[destSocketId] = [];
+     }
+     pms[destSocketId].push(data);
+     this.setState({pms: pms});
   }
 }
 
