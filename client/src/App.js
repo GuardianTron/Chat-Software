@@ -38,7 +38,7 @@ class App extends React.Component {
       <div className="App">
         {this.state.online?
          <ChatRoom userList={this.state.users} messageHandler={this.sendMessage} imageHandler={this.sendImage} messages={this.state.texts}/>:
-         <LoginForm handleConnection={this.chatConnection.connect} message={this.state.message}/>
+         <LoginForm handleConnection={this.connect} message={this.state.message}/>
          }
 
       </div>
@@ -48,6 +48,10 @@ class App extends React.Component {
   componentWillUnmount(){
     this.chatConnection.disconnect();
   }
+
+  connect = (username) =>{
+    this.chatConnection.connect(username);
+  } 
 
   handleUserError = (data) => {
     this.setState({message: data.payload});
