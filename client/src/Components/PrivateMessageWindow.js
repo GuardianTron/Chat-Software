@@ -29,7 +29,7 @@ export default class PrivateMessageWindow extends Component {
     }
 
     startDrag = (event) => {
-        event.preventDefault();
+       
         const element = this.windowRef.current;
         let node = element;
         
