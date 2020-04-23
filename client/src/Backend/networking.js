@@ -91,6 +91,7 @@ export default class ChatConnection{
         messageObj.type = "message";
         messageObj.payload = message;
         this.send(messageObj);
+        return messageObj;
 
     }
 
@@ -99,6 +100,7 @@ export default class ChatConnection{
         messageObj.type = "image";
         messageObj.payload = {mime: imageMimeType, buffer: imageBuffer};
         this.send(messageObj);
+        return messageObj;
         
     }
 
@@ -108,6 +110,7 @@ export default class ChatConnection{
         messageObj.toUsername = toUsername;
         messageObj.toSocketId = toSocketId;
         this.sendPM(messageObj);
+        return messageObj;
 
     }
 
@@ -117,6 +120,7 @@ export default class ChatConnection{
         messageObj.toUsername = toUsername;
         messageObj.toSocketId = toSocketId;
         this.sendPM(messageObj);
+        return messageObj;
     }
 
 
