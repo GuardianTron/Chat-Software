@@ -37,7 +37,9 @@ class App extends React.Component {
     return (
       <div className="App">
         {this.state.online?
-         <ChatRoom userList={this.state.users} messageHandler={this.sendMessage} imageHandler={this.sendImage} launchPMWindow={this.handleOpenPMWindow}messages={this.state.texts}/>:
+          <>
+           <ChatRoom userList={this.state.users} messageHandler={this.sendMessage} imageHandler={this.sendImage} launchPMWindow={this.handleOpenPMWindow}messages={this.state.texts}/>
+          </>:
          <LoginForm handleConnection={this.connect} message={this.state.message} />
          }
 
@@ -50,7 +52,7 @@ class App extends React.Component {
   }
 
   connect = (username) =>{
-    this.setState({username: username});
+    this.setState({username: username})
     this.chatConnection.connect(username);
   } 
 
@@ -72,6 +74,7 @@ class App extends React.Component {
   }
 
   handleWelcome = (data) => {
+    console.log(data);
     this.setState({online: true});
   }
 
@@ -89,7 +92,7 @@ class App extends React.Component {
     //user may have logged off.  Do not send
     if(!toSocketId) return;
     const messageObj = this.chatConnection.sendPrivateText(message,toUsername,toSocketId);
-    this.__appendPrivateMessageToState(messageObj.toSocketId,messageObj);
+    this.__appendPrivateMessageToState(toUsername,messageObj);
 
   }
 
@@ -98,7 +101,7 @@ class App extends React.Component {
     //user may have logged off.  Do not send
     if(!toSocketId) return;
     const messageObj = this.chatConnection.sendPrivateImage(imageBuffer,imageType,toUsername,toSocketId);
-    this.__appendPrivateMessageToState(messageObj.toSocketId,messageObj);
+    this.__appendPrivateMessageToState(toUsername,messageObj);
   }
 
   /**
@@ -112,12 +115,10 @@ class App extends React.Component {
     return () =>{
       //don't pm yourself.
       if(this.state.username === username) return; 
-      const toSocketId = this.state.users[username];
-      if(toSocketId){
-        //render function spawns windows based on pm threads,
-        //so adding one will spawn one for the 
-        this.__appendPrivateMessageToState(toSocketId);
-      }
+      //render function spawns windows based on pm threads,
+      //so adding one will spawn one for the 
+      this.__appendPrivateMessageToState(username);
+      
     }
 
   }
@@ -131,17 +132,19 @@ class App extends React.Component {
    * private message array within the state.
    * Creates new entry if one does not exist.
    * Will add message data if any is given. 
-   * @param {String} destSocketId 
+   * @param {String} toUsername
    * @param {Object} data 
    */
 
-  __appendPrivateMessageToState(destSocketId,data = null){
+  __appendPrivateMessageToState(toUsername,data = null){
     const pms = this.state.pms;
-    if(!pms.hasOwnProperty(destSocketId)){
-      pms[destSocketId] = [];
+    const toSocketId = this.state.users[toUsername];
+    if(!toSocketId) return;
+    if(!pms.hasOwnProperty(toSocketId)){
+      pms[toSocketId] = {username: toUsername, messages:[]};
     } 
     if(data){  
-      pms[destSocketId].push(data);
+      pms[toSocketId].messages.push(data);
     }
     this.setState({pms: pms});
   }
