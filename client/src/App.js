@@ -72,11 +72,11 @@ class App extends React.Component {
 
   sendMessage = message => {
     console.log(`Sending message: ${message}`);
-    this.socket.emit('message',{senderUsername: this.state.username, payload:message});
+    this.chatConnection.sendChatText(message);
   }
 
-  sendImage = imageBuffer => {
-    this.socket.emit('image',{senderUsername: this.state.username, payload: imageBuffer});
+  sendImage = (imageBuffer,imageType) => {
+    this.chatConnection.sendChatImage(imageBuffer,imageType);
   }
 
   sendPrivateMessage = (message,toUsername) =>{
