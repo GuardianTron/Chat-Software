@@ -34,11 +34,19 @@ class App extends React.Component {
   }
   
   render(){
+    const chatRoomProps = {
+      userList: this.state.users,
+      messageHandler: this.sendMessage,
+      imageHandler: this.sendImage,
+      launchPMWindow: this.handleOpenPMWindow,
+      messages: this.state.texts
+    };
     return (
       <div className="App">
         {this.state.online?
           <>
-           <ChatRoom userList={this.state.users} messageHandler={this.sendMessage} imageHandler={this.sendImage} launchPMWindow={this.handleOpenPMWindow}messages={this.state.texts}/>
+          
+           <ChatRoom {...chatRoomProps}/>
            {Object.values(this.state.pms).map(({username,messages}) => {
              return <PrivateMessageWindow username={username} messages={messages} />
            })}
