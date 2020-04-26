@@ -67,13 +67,16 @@ export default class PrivateMessageWindow extends Component {
 
     onStop = (event) => {
         this.setState({ beingDragged: false });
-        const element = this.windowRef.current.parentElement;
-        element.removeEventListener('mousemove', this.onDrag);
-        element.removeEventListener('mouseup', this.onStop);
-
-
-
+        //if statement prevents errors when server disconnects 
+        if(this.windowRef.current){  
+            const element = this.windowRef.current.parentElement;
+            element.removeEventListener('mousemove', this.onDrag);
+            element.removeEventListener('mouseup', this.onStop);
+         }
     }
 
 
+
 }
+
+
