@@ -22,14 +22,19 @@ export default class PrivateMessageWindow extends Component {
     }
     render() {
 
-        const pmSender = (message) =>{
+        const pmTextSender = (message) =>{
             const toUsername = this.props.username;
             this.props.messageHandler(message,toUsername);
         }
 
+        const pmImageSender = (imageBuffer,imageType) => {
+            const toUsername = this.props.username;
+            this.props.imageHandler(imageBuffer,imageType,toUsername);
+        }
+
         return <div className="private-message-window" ref={this.windowRef} onMouseDown={this.startDrag} >
             <header><h2>{this.props.username}</h2></header>
-            <MessageWindow {...this.props} messageHandler={pmSender} />
+            <MessageWindow {...this.props} messageHandler={pmTextSender} imageHandler={pmImageSender} />
         </div>;
     }
 

@@ -122,6 +122,7 @@ export default class ChatConnection{
         messageObj.type = 'private-image';
         messageObj.toUsername = toUsername;
         messageObj.toSocketId = toSocketId;
+        messageObj.payload = {mime: imageMimeType,buffer: imageBuffer};
         this.sendPM(messageObj);
         return messageObj;
     }

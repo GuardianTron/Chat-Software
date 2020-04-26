@@ -133,7 +133,7 @@ class PrivateTextMessage extends PrivateMessage{
 
 class PrivateImageMessage extends PrivateMessage{
     constructor(data){
-        super(PrivateMessage.PrivateImageMessage);
+        super(PrivateMessage.IMAGE,data);
     }
 }
 

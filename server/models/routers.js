@@ -12,6 +12,6 @@ module.exports.privateTextMessageRouter = function(chatServer,data){
     chatServer.sendPrivateMessage((new PrivateTextMessage(data)).toJSON());
 }
 
-module.exports.privateImageMessageRouter = function(chatsServer,data){
+module.exports.privateImageMessageRouter = function(chatServer,data){
     chatServer.sendPrivateMessage((new PrivateImageMessage(data)).toJSON());
 }

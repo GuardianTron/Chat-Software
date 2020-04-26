@@ -110,7 +110,7 @@ class App extends React.Component {
   }
 
   sendPrivateImage = (imageBuffer, imageType, toUsername) => {
-    const toSocketId = this.state.username[toUsername];
+    const toSocketId = this.state.users[toUsername];
     //user may have logged off.  Do not send
     if(!toSocketId) return;
     const messageObj = this.chatConnection.sendPrivateImage(imageBuffer,imageType,toUsername,toSocketId);

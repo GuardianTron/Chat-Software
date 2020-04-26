@@ -75,7 +75,7 @@ class MessageWindow extends Component{
 export default MessageWindow;
 
 const Message = ({content}) =>{
-    if(content.type === "image"){
+    if(content.type.match(/image/)){
         return <>{content.senderUsername}:<DownloadedImage buffer={content.payload.buffer} type={content.payload.type} /></>;
     }
     else if(content.type === "server-announcement"){
