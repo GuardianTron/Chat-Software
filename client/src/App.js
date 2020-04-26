@@ -48,7 +48,11 @@ class App extends React.Component {
           
            <ChatRoom {...chatRoomProps}/>
            {Object.values(this.state.pms).map(({username,messages}) => {
-             return <PrivateMessageWindow username={username} messages={messages} messageHandler={this.sendPrivateMessage} imageHandler={this.sendPrivateImage} />
+             return <PrivateMessageWindow 
+                    key={username}
+                    username={username} messages={messages} 
+                    messageHandler={this.sendPrivateMessage}
+                    imageHandler={this.sendPrivateImage} />
            })}
           </>:
          <LoginForm handleConnection={this.connect} message={this.state.message} />

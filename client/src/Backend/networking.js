@@ -62,6 +62,7 @@ export default class ChatConnection{
         const message = {};
         message.senderUsername = this.username;
         message.fromSocketId = this.socket.id;
+        message.time = Date.now();
         message.type = null;
         message.payload = null;
         return message;
