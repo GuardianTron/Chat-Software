@@ -5,7 +5,7 @@ export default class PrivateMessageWindow extends Component {
 
     state = {
         beingDragged: false,
-        mouseOffset: {x: 0, y: 0},
+        mouseOffset: { x: 0, y: 0 },
         collapsed: false,
         toUsername: ""
     }
@@ -22,24 +22,29 @@ export default class PrivateMessageWindow extends Component {
     }
     render() {
 
+        const pmSender = (message) =>{
+            const toUsername = this.props.username;
+            this.props.messageHandler(message,toUsername);
+        }
+
         return <div className="private-message-window" ref={this.windowRef} onMouseDown={this.startDrag} >
             <header><h2>{this.props.username}</h2></header>
-            <MessageWindow {...this.props} />
+            <MessageWindow {...this.props} messageHandler={pmSender} />
         </div>;
     }
 
     startDrag = (event) => {
-       
+
         const element = this.windowRef.current;
         let node = element;
-        
+
 
         element.style.position = "absolute";
         const rect = element.getBoundingClientRect();
-        const mouseOffset= {};
+        const mouseOffset = {};
         mouseOffset.x = event.clientX - rect.left;
         mouseOffset.y = event.clientY - rect.top;
-        this.setState({beingDragged: true, mouseOffset: mouseOffset});
+        this.setState({ beingDragged: true, mouseOffset: mouseOffset });
         const parent = this.windowRef.current.parentElement;
         parent.addEventListener('mousemove', this.onDrag);
         parent.addEventListener('mouseleave', this.onStop);
@@ -56,7 +61,7 @@ export default class PrivateMessageWindow extends Component {
     }
 
     onStop = (event) => {
-        this.setState({beingDragged: false});
+        this.setState({ beingDragged: false });
         const element = this.windowRef.current.parentElement;
         element.removeEventListener('mousemove', this.onDrag);
         element.removeEventListener('mouseup', this.onStop);

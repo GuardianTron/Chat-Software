@@ -31,17 +31,18 @@ class ChatServer{
 
     attachFilter = (filter, messageTypes = "all")=>{
         filter.attachServer(this);
-        if(typeof(messageTypes) !== "Array"){
+        if(!(messageTypes instanceof Array)){
             messageTypes = [messageTypes];
         }
        
-    
+       
 
         for(let messageType of messageTypes){
             
             if(!this.messageFilters.hasOwnProperty(messageType)){
                 this.messageFilters[messageType] = [];
              }
+            console.log(`Attaching filter for ${messageType}`);
             this.messageFilters[messageType].push(filter);
             
         }
@@ -152,6 +153,7 @@ class ChatServer{
     }
 
     sendPrivateMessage(data){
+        console.log("Sending PM: ", data);
         this.io.to(data.toSocketId).emit(PRIVATE_MESSAGE,data);
     }
 

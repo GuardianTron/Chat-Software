@@ -71,6 +71,7 @@ export default class ChatConnection{
         const message = this.__createBasicMessageObj();
         message.toSocketId = null;
         message.toUsername = null;
+        return message;
     }
 
     /**
@@ -109,7 +110,9 @@ export default class ChatConnection{
         messageObj.type = "private-message";
         messageObj.toUsername = toUsername;
         messageObj.toSocketId = toSocketId;
+        messageObj.payload = message;
         this.sendPM(messageObj);
+        console.log(messageObj);
         return messageObj;
 
     }

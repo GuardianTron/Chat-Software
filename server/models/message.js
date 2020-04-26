@@ -32,7 +32,7 @@ class Message{
         this._payload = payload;
     }
 
-    toJSON = () =>{
+    toJSON(){
         const json = {
             fromSocketId: this.fromSocketId,
             senderUsername: this.senderUsername,
@@ -102,22 +102,22 @@ class PrivateMessage extends Message{
      
     constructor(type,data){
         super(type,data);
-        this._toSocketId;
-        this._toUsername;
+        this._toSocketId = data.toSocketId;
+        this._toUsername = data.toUsername;
         
     }
 
     get toSocketId(){
         return this._toSocketId;
     }
-    get _toUsername(){
+    get toUsername(){
         return this._toUsername;
     }
 
-    get toJSON(){
-        const json = super.getJSON();
+    toJSON(){
+        const json = super.toJSON();
         json.toSocketId = this.toSocketId;
-        json._toUsername = this._toUsername;
+        json.toUsername = this.toUsername;
         return json;
     }
 }

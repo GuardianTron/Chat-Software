@@ -85,6 +85,7 @@ class PrivateMessageUserFilter extends MessageFilter{
     filter(data){
         super.filter (data);
         try{
+            console.log("Filtering PM: ", data);
             //makes sure username matches the socket
             if(this.chatServer.users.getUsernameBySocketId(data.toSocketId) !== data.toUsername){
                 throw new UserError(`An error occurred finding ${data.toUsername}`);

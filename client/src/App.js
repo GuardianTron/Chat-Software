@@ -48,7 +48,7 @@ class App extends React.Component {
           
            <ChatRoom {...chatRoomProps}/>
            {Object.values(this.state.pms).map(({username,messages}) => {
-             return <PrivateMessageWindow username={username} messages={messages} />
+             return <PrivateMessageWindow username={username} messages={messages} messageHandler={this.sendPrivateMessage} imageHandler={this.sendPrivateImage} />
            })}
           </>:
          <LoginForm handleConnection={this.connect} message={this.state.message} />
@@ -77,7 +77,8 @@ class App extends React.Component {
   }
 
   handlePrivateMessage = (data) =>{
-    this.__appendPrivateMessageToState(data.fromSocketId,data);
+    console.log('PM',data);
+    this.__appendPrivateMessageToState(data.senderUsername,data);
   }
 
   handleUpdateUserList = (data) =>{
@@ -100,6 +101,7 @@ class App extends React.Component {
 
   sendPrivateMessage = (message,toUsername) =>{
     const toSocketId = this.state.users[toUsername];
+    
     //user may have logged off.  Do not send
     if(!toSocketId) return;
     const messageObj = this.chatConnection.sendPrivateText(message,toUsername,toSocketId);
@@ -112,6 +114,7 @@ class App extends React.Component {
     //user may have logged off.  Do not send
     if(!toSocketId) return;
     const messageObj = this.chatConnection.sendPrivateImage(imageBuffer,imageType,toUsername,toSocketId);
+    
     this.__appendPrivateMessageToState(toUsername,messageObj);
   }
 
