@@ -110,7 +110,7 @@ export default class ChatConnection{
 
     sendPrivateText = (message,toUsername,toSocketId) => {
         const messageObj = this.__createBasicPrivateMessageObj();
-        messageObj.type = "private-message";
+        messageObj.type = "message";
         messageObj.toUsername = toUsername;
         messageObj.toSocketId = toSocketId;
         messageObj.payload = message;
@@ -122,7 +122,7 @@ export default class ChatConnection{
 
     sendPrivateImage(imageBuffer,imageMimeType,toUsername,toSocketId){
         const messageObj = this.__createBasicPrivateMessageObj();
-        messageObj.type = 'private-image';
+        messageObj.type = 'image';
         messageObj.toUsername = toUsername;
         messageObj.toSocketId = toSocketId;
         messageObj.payload = {mime: imageMimeType,buffer: imageBuffer};
