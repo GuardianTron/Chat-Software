@@ -30,6 +30,7 @@ class TextMessageFilter extends MessageFilter{
 
     filter(data){
         super.filter(data);
+        data.type='message';
         if(data.payload.length > this.maxCharLength){
            throw new UserError(`Messages must be no more than ${this.maxCharLength} characters in length.`);
         }
@@ -85,7 +86,6 @@ class PrivateMessageUserFilter extends MessageFilter{
     filter(data){
         super.filter (data);
         try{
-            console.log("Filtering PM: ", data);
             //makes sure username matches the socket
             if(this.chatServer.users.getUsernameBySocketId(data.toSocketId) !== data.toUsername){
                 throw new UserError(`An error occurred finding ${data.toUsername}`);

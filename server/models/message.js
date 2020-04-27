@@ -5,7 +5,7 @@ class Message{
      *  @property type {String} -- type of message
      *  @property payload {any}  -- overridden by specific message types
      */
-    constructor(type, {fromSocketId,senderUsername,channel,payload}){
+    constructor(channel,{fromSocketId,type,senderUsername,payload}){
         this.obj = {}
         this.obj.type = type;
         this.obj.channel = channel;
@@ -91,10 +91,12 @@ class UserErrorMessage extends Message{
 
 
 class ServerMessage extends Message{
-    constructor(type,data){
+    constructor(channel,data){
+
+        data.type=Message.MESSAGE;
         data.senderUsername = null;
         data.fromSocketId = null;
-        super(type,data);
+        super(channel,data);
     }
 }
 
@@ -111,8 +113,8 @@ module.exports.ServerAnnouncementMessage = ServerAnnouncementMessage;
 
 class PrivateMessage extends Message{
      
-    constructor(type,data){
-        super(type,data);
+    constructor(channel,data){
+        super(channel,data);
         this._toSocketId = data.toSocketId;
         this._toUsername = data.toUsername;
         

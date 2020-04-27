@@ -60,6 +60,7 @@ export default class ChatConnection{
 
     __createBasicMessageObj(){
         const message = {};
+        message.channel = 'message';
         message.senderUsername = this.username;
         message.fromSocketId = this.socket.id;
         message.time = Date.now();
@@ -70,6 +71,7 @@ export default class ChatConnection{
 
     __createBasicPrivateMessageObj(){
         const message = this.__createBasicMessageObj();
+        message.channel = 'private-message';
         message.toSocketId = null;
         message.toUsername = null;
         return message;

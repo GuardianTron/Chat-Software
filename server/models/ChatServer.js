@@ -1,6 +1,6 @@
 const {Users} = require("./Users");
 const {UserError} = require("./error");
-const {ServerAnnouncementMessage} = require("./message");
+const {ServerAnnouncementMessage,Message,PrivateMessage} = require("./message");
 
 
 const LOGIN = "login";
@@ -22,10 +22,12 @@ class ChatServer{
         this.messageRouters =  {};
         this.messageFilters = {};
         this.initialized = false;
+        this.attachMessageRouter(this.sendMessageToChatroom,CHAT_MESSAGE);
+        this.attachMessageRouter(this.sendPrivateMessage,PRIVATE_MESSAGE);
     }
 
-    attachMessageRouter = (handler, messageType) => {
-        this.messageRouters[messageType] = handler;
+    attachMessageRouter = (handler, channel) => {
+        this.messageRouters[channel] = handler;
 
     }
 
@@ -114,10 +116,10 @@ class ChatServer{
                    await (Promise.all(this.messageFilters[data.type].map(async filter =>{return filter.filter(data)})));
                }
 
-               if(this.messageRouters[data.type]){
-                   this.messageRouters[data.type](this,data);
+               if(this.messageRouters[data.channel]){
+                   this.messageRouters[data.channel](this,data);
                }
-               else throw new Error(`${data.type} does not have a registered router.`);
+               else throw new Error(`${data.channel} does not have a registered router.`);
               
             }
             catch(error){
@@ -144,7 +146,7 @@ class ChatServer{
 
     sendMessageToChatroom(data){
         console.log(data);
-        this.io.sockets.emit(CHAT_MESSAGE,data);
+        this.io.sockets.emit(CHAT_MESSAGE,(new Message(CHAT_MESSAGE,data).toJSON()));
     }
 
     sendErrorToUser(socketId,message){
@@ -154,7 +156,7 @@ class ChatServer{
 
     sendPrivateMessage(data){
         console.log("Sending PM: ", data);
-        this.io.to(data.toSocketId).emit(PRIVATE_MESSAGE,data);
+        this.io.to(data.toSocketId).emit(PRIVATE_MESSAGE,(new PrivateMessage(PRIVATE_MESSAGE,data)).toJSON());
     }
 
     handleError(error){
