@@ -126,6 +126,10 @@ class ChatServer{
                const username = this.users.getUsernameBySocketId(socket.id);
                data.senderUsername = username;
                data.fromSocketId = socket.id;
+               //ensure that only data of allowed types is passed
+               if((!data.type in Object.keys(this.typeFilters))){
+                   throw new Error(`${data.type} is not supported.`);
+               }
                await this._runCallbacks(this.typeFilters,data.type,data);
                await this._runCallbacks(this.channelFilters,data.channel,data);
                if(this.messageRouters[data.channel]){
