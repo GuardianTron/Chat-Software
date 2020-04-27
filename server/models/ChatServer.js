@@ -32,20 +32,22 @@ class ChatServer{
     }
 
     attachFilter = (filter, messageTypes = "all")=>{
+       this._attachCallback(this.messageFilters,filter,messageTypes);
+    }
+
+    _attachCallback(destObj,filter,events){
         filter.attachServer(this);
-        if(!(messageTypes instanceof Array)){
-            messageTypes = [messageTypes];
+        if(!(events instanceof Array)){
+            events = [events];
         }
        
-       
-
-        for(let messageType of messageTypes){
+       for(let event of events){
             
-            if(!this.messageFilters.hasOwnProperty(messageType)){
-                this.messageFilters[messageType] = [];
+            if(!destObj.hasOwnProperty(event)){
+                destObj[event] = [];
              }
-            console.log(`Attaching filter for ${messageType}`);
-            this.messageFilters[messageType].push(filter);
+            console.log(`Attaching filter for ${event}`);
+            destObj[event].push(filter);
             
         }
     }
