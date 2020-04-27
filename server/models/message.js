@@ -39,7 +39,18 @@ class Message{
     }
 
     toJSON(){
-        
+        /*
+         * Allow properties attached directly 
+         * to instance to be attached to message 
+         * object.
+         */
+        Object.keys(this).map(key =>{
+            //don't attach internal object ot itself
+            if(key !== 'obj'){
+                this.obj[key] = this[key];
+            }
+        });
+
         return this.obj;
     }
 
