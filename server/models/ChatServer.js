@@ -14,13 +14,15 @@ const WELCOME = "welcome";
 const ERROR_MESSAGE = "user-error";
 
 
+
 class ChatServer{
 
     constructor(io){
         this.io = io;
         this.users = new Users();
         this.messageRouters =  {};
-        this.messageFilters = {};
+        this.typeFilters = {};
+        this.channelFilters = {};
         this.initialized = false;
         this.attachMessageRouter(this.sendMessageToChatroom,CHAT_MESSAGE);
         this.attachMessageRouter(this.sendPrivateMessage,PRIVATE_MESSAGE);
@@ -31,8 +33,12 @@ class ChatServer{
 
     }
 
-    attachFilter = (filter, messageTypes = "all")=>{
-       this._attachCallback(this.messageFilters,filter,messageTypes);
+    attachTypeFilter = (filter, messageTypes = "all")=>{
+       this._attachCallback(this.typeFilters,filter,messageTypes);
+    }
+
+    attachChannelFilter = (filter,channels = "all") => {
+        this._attachCallback(this.channelFilters,filter,channels);
     }
 
     _attachCallback(destObj,filter,events){
@@ -120,8 +126,8 @@ class ChatServer{
                const username = this.users.getUsernameBySocketId(socket.id);
                data.senderUsername = username;
                data.fromSocketId = socket.id;
-               await this._runCallbacks(this.messageFilters,data.type,data);
-
+               await this._runCallbacks(this.typeFilters,data.type,data);
+               await this._runCallbacks(this.channelFilters,data.channel,data);
                if(this.messageRouters[data.channel]){
                    this.messageRouters[data.channel](data);
                }
@@ -173,4 +179,9 @@ class ChatServer{
 
 
 }
+
+ChatServer.CHAT_MESSAGE = CHAT_MESSAGE;
+ChatServer.PRIVATE_MESSAGE = PRIVATE_MESSAGE;
+
+
 module.exports.ChatServer = ChatServer;
