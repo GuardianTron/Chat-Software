@@ -5,27 +5,33 @@ class Message{
      *  @property type {String} -- type of message
      *  @property payload {any}  -- overridden by specific message types
      */
-    constructor(type, {fromSocketId,senderUsername,payload}){
-        this.type = type;
-        this._fromSocketId = fromSocketId;
-        this.senderUsername = senderUsername;
-        this.payload = payload; 
-        this.time = Date.now();
+    constructor(type, {fromSocketId,senderUsername,channel,payload}){
+        this.obj = {}
+        this.obj.type = type;
+        this.obj.channel = channel;
+        this.obj.fromSocketId = fromSocketId;
+        this.obj.senderUsername = senderUsername;
+        this.obj.payload = payload; 
+        this.obj.time = Date.now();
         
     }
 
  
 
     set fromSocketId(id){
-        this._fromSocketId = id;
+        this.obj.fromSocketId = id;
     }
 
     get fromSocketId(){
-        return this._fromSocketId;
+        return this.obj.fromSocketId;
     }
 
     get payload(){
-        return this._payload;
+        return this.obj.payload;
+    }
+
+    get channel(){
+        return this.obj.channel;
     }
 
     set payload(payload){
@@ -33,14 +39,8 @@ class Message{
     }
 
     toJSON(){
-        const json = {
-            fromSocketId: this.fromSocketId,
-            senderUsername: this.senderUsername,
-            type: this.type,
-            payload: this._payload,
-            time: this.time
-        };
-        return json;
+        
+        return this.obj;
     }
 
     
