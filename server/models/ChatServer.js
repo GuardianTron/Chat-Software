@@ -52,6 +52,18 @@ class ChatServer{
         }
     }
 
+    async _runCallbacks(filters,event,data){
+        //handle generic message filters if they exist
+        if(filters.hasOwnProperty('all') && filters['all'] > 0){
+            await (Promise.all(filters['all'].map(async filter =>{return filter.filter(data)})));
+        }
+
+        //handle message filers for specified type
+        if(filters[event]){
+           await (Promise.all(filters[event].map(async filter =>{return filter.filter(data)})));
+       }
+    }
+
     
 
     init = ()=>{
@@ -108,15 +120,7 @@ class ChatServer{
                const username = this.users.getUsernameBySocketId(socket.id);
                data.senderUsername = username;
                data.fromSocketId = socket.id;
-               //handle generic message filters if they exist
-               if(this.messageFilters.hasOwnProperty('all') && this.messageFilters['all'] > 0){
-                    await (Promise.all(this.messageFilters['all'].map(async filter =>{return filter.filter(data)})));
-               }
-
-               //handle message filers for specified type
-               if(this.messageFilters[data.type]){
-                   await (Promise.all(this.messageFilters[data.type].map(async filter =>{return filter.filter(data)})));
-               }
+               await this._runCallbacks(this.messageFilters,data.type,data);
 
                if(this.messageRouters[data.channel]){
                    this.messageRouters[data.channel](data);
