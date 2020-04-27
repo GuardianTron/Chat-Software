@@ -45,8 +45,8 @@ class Message{
          * object.
          */
         Object.keys(this).map(key =>{
-            //don't attach internal object ot itself
-            if(key !== 'obj'){
+            //don't attach internal object ot itself or 'private' attributes
+            if(key !== 'obj' && key[0] !== '_'){
                 this.obj[key] = this[key];
             }
         });
