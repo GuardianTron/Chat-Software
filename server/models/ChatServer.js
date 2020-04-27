@@ -117,7 +117,7 @@ class ChatServer{
                }
 
                if(this.messageRouters[data.channel]){
-                   this.messageRouters[data.channel](this,data);
+                   this.messageRouters[data.channel](data);
                }
                else throw new Error(`${data.channel} does not have a registered router.`);
               
@@ -144,8 +144,8 @@ class ChatServer{
         this.io.sockets.emit(CHAT_MESSAGE,(new ServerAnnouncementMessage({payload: message})).toJSON());
     }
 
-    sendMessageToChatroom(data){
-        console.log(data);
+    sendMessageToChatroom = (data) =>{
+        console.log('Sending chat',data);
         this.io.sockets.emit(CHAT_MESSAGE,(new Message(CHAT_MESSAGE,data).toJSON()));
     }
 
@@ -154,7 +154,7 @@ class ChatServer{
         this.io.to(socketId).emit(ERROR_MESSAGE,message);
     }
 
-    sendPrivateMessage(data){
+    sendPrivateMessage = (data) =>{
         console.log("Sending PM: ", data);
         this.io.to(data.toSocketId).emit(PRIVATE_MESSAGE,(new PrivateMessage(PRIVATE_MESSAGE,data)).toJSON());
     }
