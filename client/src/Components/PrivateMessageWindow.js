@@ -38,7 +38,7 @@ export default class PrivateMessageWindow extends Component {
         }
 
         return <div className="private-message-window" ref={this.windowRef} onMouseDown={this.startDrag} >
-            <header><h2>{this.props.username}</h2></header>
+            <header><h2>{this.props.username}</h2><span onClick={this.toggleCollapsed}>-</span></header>
             {messageWindow}
         </div>;
     }
@@ -78,6 +78,11 @@ export default class PrivateMessageWindow extends Component {
             element.removeEventListener('mousemove', this.onDrag);
             element.removeEventListener('mouseup', this.onStop);
          }
+    }
+
+    toggleCollapsed = (event) => {
+        const collapsed = !this.state.collapsed;
+        this.setState({collapsed: collapsed});
     }
 
 
