@@ -31,10 +31,15 @@ export default class PrivateMessageWindow extends Component {
             const toUsername = this.props.username;
             this.props.imageHandler(imageBuffer,imageType,toUsername);
         }
+ 
+        let messageWindow = <></>;
+        if(!this.state.collapsed){
+            messageWindow = <MessageWindow {...this.props} messageHandler={pmTextSender} imageHandler={pmImageSender} />; 
+        }
 
         return <div className="private-message-window" ref={this.windowRef} onMouseDown={this.startDrag} >
             <header><h2>{this.props.username}</h2></header>
-            <MessageWindow {...this.props} messageHandler={pmTextSender} imageHandler={pmImageSender} />
+            {messageWindow}
         </div>;
     }
 
