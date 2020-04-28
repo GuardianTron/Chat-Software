@@ -7,6 +7,7 @@ export default class PrivateMessageWindow extends Component {
         beingDragged: false,
         mouseOffset: { x: 0, y: 0 },
         collapsed: false,
+        closed: false,
         toUsername: ""
     }
 
@@ -17,11 +18,25 @@ export default class PrivateMessageWindow extends Component {
         this.mouseOffset = { x: 0, y: 0 };
     }
 
-    componentDidMount() {
-        console.log(this.windowRef.current.parentElement);
+    componentDidUpdate(prevProps,prevState,snapshot){
+        /*
+         * Open closed window if new message is 
+         * received.  This occurs if
+         * either the lastUpdate prop is defined 
+         * for the first time or if the lastUpdate 
+         * prop has increased
+         */
+        if(this.state.closed && ((!prevProps.lastUpdate && this.props.lastUpdate) || prevProps.lastUpdate < this.props.lastUpdate )){
+            this.setState({closed: false});
+        }
+        console.log('Update Status:',prevProps.lastUpdate,this.props.lastUpdate);
     }
+
+
     render() {
 
+        //send empty fragment if closed
+        if(this.state.closed) return <></>;
         const pmTextSender = (message) =>{
             const toUsername = this.props.username;
             this.props.messageHandler(message,toUsername);
@@ -38,7 +53,7 @@ export default class PrivateMessageWindow extends Component {
         }
 
         return <div className="private-message-window" ref={this.windowRef} onMouseDown={this.startDrag} >
-            <header><h2>{this.props.username}</h2><span onClick={this.toggleCollapsed}>-</span></header>
+            <header><h2>{this.props.username}</h2><span onClick={this.toggleCollapsed}>-</span><span onClick={this.handleClose}>x</span></header>
             {messageWindow}
         </div>;
     }
@@ -80,9 +95,15 @@ export default class PrivateMessageWindow extends Component {
          }
     }
 
+
+
     toggleCollapsed = (event) => {
         const collapsed = !this.state.collapsed;
         this.setState({collapsed: collapsed});
+    }
+
+    handleClose = event => {
+        this.setState({closed:true});
     }
 
 

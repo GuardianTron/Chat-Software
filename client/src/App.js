@@ -47,12 +47,15 @@ class App extends React.Component {
           <>
           
            <ChatRoom {...chatRoomProps}/>
-           {Object.values(this.state.pms).map(({username,messages}) => {
+           {Object.values(this.state.pms).map(({lastUpdate, username,messages}) => {
              return <PrivateMessageWindow 
                     key={username}
-                    username={username} messages={messages} 
+                    username={username}
+                    messages={messages}
+                    lastUpdate={lastUpdate} 
                     messageHandler={this.sendPrivateMessage}
-                    imageHandler={this.sendPrivateImage} />
+                    imageHandler={this.sendPrivateImage}
+                     />
            })}
           </>:
          <LoginForm handleConnection={this.connect} message={this.state.message} />
@@ -164,6 +167,9 @@ class App extends React.Component {
     if(data){  
       pms[toSocketId].messages.push(data);
     }
+    //allows all clicks to change time to allow message
+    //window to know it should open if closed.
+    pms[toSocketId].lastUpdate = Date.now();
     this.setState({pms: pms});
   }
 }
