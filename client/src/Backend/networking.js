@@ -17,7 +17,9 @@ export default class ChatConnection{
             this.validationInfo = data;
             this.socket.removeAllListeners('validation-info');
             this.socket.close();
-            console.log('validation info: ', data);
+            this.imageValidation = this.validationInfo.type.image.pop();
+            this.messageValidation = this.validationInfo.type.message.pop();
+            this.usernameValidation = this.validationInfo.username;
         });
     }
     
@@ -134,6 +136,17 @@ export default class ChatConnection{
 
     }
 
+    /**
+     * Sends an image via private message.
+     * 
+     * @param {Buffer} imageBuffer -- binary buffer of the image
+     * @param {String} imageMimeType -- mime type string
+     * @param {String} toUsername 
+     * @param {String} toSocketId
+     * @returns {Object} 
+     * @throws Error -- if the image is too large or not a valid mime type
+     */
+
     sendPrivateImage(imageBuffer,imageMimeType,toUsername,toSocketId){
         const messageObj = this.__createBasicPrivateMessageObj();
         messageObj.type = 'image';
@@ -142,6 +155,10 @@ export default class ChatConnection{
         messageObj.payload = {mime: imageMimeType,buffer: imageBuffer};
         this.sendPM(messageObj);
         return messageObj;
+    }
+
+    validateImage(imageBuffer,imageMimeType){
+
     }
 
 
