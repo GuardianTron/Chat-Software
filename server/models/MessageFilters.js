@@ -36,7 +36,7 @@ class TextMessageFilter extends MessageFilter{
     constructor(maxLength){
         super();
         this.maxCharLength = maxLength;
-        this.minCharLength = 0;
+        this.minCharLength = 1;
     }
 
     filter(data){
@@ -44,6 +44,9 @@ class TextMessageFilter extends MessageFilter{
         data.type='message';
         if(data.payload.length > this.maxCharLength){
            throw new UserError(`Messages must be no more than ${this.maxCharLength} characters in length.`);
+        }
+        else if(data.payload.length < this.minCharLength){
+            throw new UserError(`Message must be at least ${this.minCharLength} character(s) in length.`);
         }
     }
 

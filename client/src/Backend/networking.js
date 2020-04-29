@@ -19,6 +19,7 @@ export default class ChatConnection{
             this.socket.close();
             this.imageValidation = this.validationInfo.type.image.pop();
             this.messageValidation = this.validationInfo.type.message.pop();
+            console.log(this.messageValidation,this.imageValidation);
             this.usernameValidation = this.validationInfo.username;
         });
     }
@@ -107,6 +108,7 @@ export default class ChatConnection{
     }
 
     sendChatText = (message) => {
+        this.validateMessage(message);
         const messageObj = this.__createBasicMessageObj();
         messageObj.type = "message";
         messageObj.payload = message;
@@ -116,6 +118,7 @@ export default class ChatConnection{
     }
 
     sendChatImage = (imageBuffer, imageMimeType) => {
+        this.validateImage(imageBuffer,imageMimeType);
         const messageObj = this.__createBasicMessageObj();
         messageObj.type = "image";
         messageObj.payload = {mime: imageMimeType, buffer: imageBuffer};
@@ -125,6 +128,7 @@ export default class ChatConnection{
     }
 
     sendPrivateText = (message,toUsername,toSocketId) => {
+        this.validateMessage(message);
         const messageObj = this.__createBasicPrivateMessageObj();
         messageObj.type = "message";
         messageObj.toUsername = toUsername;
@@ -149,6 +153,7 @@ export default class ChatConnection{
 
     sendPrivateImage(imageBuffer,imageMimeType,toUsername,toSocketId){
         const messageObj = this.__createBasicPrivateMessageObj();
+        this.validateImage(imageBuffer,imageMimeType);
         messageObj.type = 'image';
         messageObj.toUsername = toUsername;
         messageObj.toSocketId = toSocketId;
@@ -157,9 +162,30 @@ export default class ChatConnection{
         return messageObj;
     }
 
+    /**
+     * 
+     * @param {ArrayBuffer} imageBuffer 
+     * @param {String} imageMimeType 
+     * @throws {Error} 
+     */
+
     validateImage(imageBuffer,imageMimeType){
+        if(imageBuffer.length > this.imageValidation.maxSizeBytes){
+            throw new Error(`Images may be no larger than ${this.imageValidation.maxSizeBytes/(8*Math.pow(2,20))} MB`);
+        }
+        else if(!this.imageValidation.allowedMimes.includes(imageMimeType)){
+            throw new Error(`Images of type: ${imageMimeType} are not allowed.`);
+        }
 
     }
+
+    validateMessage(message){
+        const minLength = this.messageValidation.minCharLength;
+        const maxLength = this.messageValidation.maxCharLength;
+        if(message.length < minLength) throw new Error("Please enter a message.");
+        else if(message.length > maxLength) throw new Error(`Messages must may only be ${maxLength} characters long.`);
+    }
+    
 
 
 
