@@ -57,7 +57,7 @@ class Users{
     }
 
     getValidationConfig(){
-        return {usernameRegex: this.usernameRE};
+        return {usernameRegex: this.usernameRE.toString()};
     }
 }
 
