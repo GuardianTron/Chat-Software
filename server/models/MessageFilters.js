@@ -14,6 +14,16 @@ class MessageFilter{
         this.chatServer = chatServer; 
     }
 
+    /**
+     * Returns an object 
+     * that details various checks client's can implement
+     * @return {Object} - object or null
+     */
+
+    getValidationConfig(){
+        return null;
+    }
+
     filter(data){
      
     }
@@ -26,6 +36,7 @@ class TextMessageFilter extends MessageFilter{
     constructor(maxLength){
         super();
         this.maxCharLength = maxLength;
+        this.minCharLength = 0;
     }
 
     filter(data){
@@ -36,16 +47,27 @@ class TextMessageFilter extends MessageFilter{
         }
     }
 
+    getValidationConfig(){
+        return {
+            maxCharLength: this.maxCharLength,
+            minCharLength: this.minCharLength
+        
+        };
+    }
+
+
+
 
 }
 
 class ImageMessageFilter extends MessageFilter{
 
-    constructor(maxWidth,maxHeight,maxSizeBytes){
+    constructor(maxWidth,maxHeight,maxSizeBytes,allowedMimes = ["image/png","image/gif","image/jpeg","image/jpg"]){
        super();
         this.maxWidth = maxWidth;
         this.maxHeight = maxHeight;
         this.maxSizeBytes = maxSizeBytes;
+        this.allowedMimes = allowedMimes;
     }
 
     async filter(data){
@@ -66,6 +88,16 @@ class ImageMessageFilter extends MessageFilter{
                 throw error;
             }
         }
+    }
+
+    getValidationConfig(){
+        return{
+            maxWidth: this.maxWidth,
+            maxHeight: this.maxHeight,
+            maxSizeBytes: this.maxSizeBytes,
+            allowedMimes: this.allowedMimes
+
+        };
     }
     
 }
