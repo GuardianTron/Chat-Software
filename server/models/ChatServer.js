@@ -24,6 +24,15 @@ class ChatServer{
         this.typeFilters = {};
         this.channelFilters = {};
         this.initialized = false;
+        //set up initial validation configurations for client
+        this.validationConfigs = {
+            username: this.users.getValidationConfig(),
+            type: {},
+            channel: {}
+        };
+
+
+        
         this.attachMessageRouter(this.sendMessageToChatroom,CHAT_MESSAGE);
         this.attachMessageRouter(this.sendPrivateMessage,PRIVATE_MESSAGE);
     }
@@ -34,10 +43,12 @@ class ChatServer{
     }
 
     attachTypeFilter = (filter, messageTypes = "all")=>{
+       this._attachValidationData(this.validationConfigs.type,filter,messageTypes);
        this._attachCallback(this.typeFilters,filter,messageTypes);
     }
 
     attachChannelFilter = (filter,channels = "all") => {
+        this._attachValidationData(this.validationConfigs.channel,filter,channels);
         this._attachCallback(this.channelFilters,filter,channels);
     }
 
@@ -58,6 +69,18 @@ class ChatServer{
         }
     }
 
+    _attachValidationData(destObj,filter,types){
+        if(!(types instanceof Array)){
+            types = [types];
+        }
+        for(let type of types){
+            if(!destObj.hasOwnProperty(type)){
+                destObj[type] = [];
+            }
+            destObj[type].push(filter.getValidationConfig());
+        }
+    }
+
     async _runCallbacks(filters,event,data){
         //handle generic message filters if they exist
         if(filters.hasOwnProperty('all') && filters['all'] > 0){
@@ -72,7 +95,7 @@ class ChatServer{
 
     
 
-    init = ()=>{
+    init = ()=>{;
         //only set up call backs for first initialization
         if(this.initialized) return;
         this.initialized = true;
