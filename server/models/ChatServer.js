@@ -10,6 +10,7 @@ const USER_DISCONNECT = "disconnect";
 const UPDATE_USER_LIST = "update-user-list";
 const SERVER_ANNOUNCEMENT = "server-announcement";
 const WELCOME = "welcome";
+const VALIDATION_INFO = "validation-info";
 
 const ERROR_MESSAGE = "user-error";
 
@@ -104,6 +105,7 @@ class ChatServer{
             socket.on(CHAT_MESSAGE, this.sendMessages(socket) );
             socket.on(PRIVATE_MESSAGE,this.sendMessages(socket));
             socket.on(USER_DISCONNECT,this.userDisconnect(socket));
+            socket.on(VALIDATION_INFO,this.sendValidationInfo(socket));
         });
     }
 
@@ -196,6 +198,10 @@ class ChatServer{
     sendPrivateMessage = (data) =>{
         console.log("Sending PM: ", data);
         this.io.to(data.toSocketId).emit(PRIVATE_MESSAGE,(new PrivateMessage(PRIVATE_MESSAGE,data)).toJSON());
+    }
+
+    sendValidationInfo = (socket) => {
+        return (data) => socket.emit(VALIDATION_INFO,this.validationConfigs);
     }
 
     handleError(error){

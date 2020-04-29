@@ -30,6 +30,7 @@ class App extends React.Component {
     this.chatConnection.onWelcome = this.handleWelcome;
     this.chatConnection.onUpdateUserList = this.handleUpdateUserList;
     this.chatConnection.onServerDisconnect = this.handleServerDisconnect;
+    this.chatConnection.getValidationInfo();
 
   }
   

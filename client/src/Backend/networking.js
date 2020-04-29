@@ -6,6 +6,20 @@ export default class ChatConnection{
     constructor(url){
         this.url = url;
     }
+    /**
+     * Retrieve configuration information
+     * for validation from the server.
+     */
+    getValidationInfo = () =>{
+        this.socket = openSocket(this.url);
+        this.socket.emit('validation-info',null);
+        this.socket.on('validation-info',(data ) => {
+            this.validationInfo = data;
+            this.socket.removeAllListeners('validation-info');
+            this.socket.close();
+            console.log('validation info: ', data);
+        });
+    }
     
     /**
      * Establishes a connection to the server and logs
