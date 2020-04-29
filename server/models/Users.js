@@ -1,10 +1,11 @@
 const {UserError} = require('./error');
 class Users{
 
-    usernameRE = /^[\w!.\?\~][\w!.\?\~@ ]{0,30}[\w!.\?\~]$/i
+    
     constructor(){
         this.users = {};
         this.usersBySocket = {};
+        this.usernameRE = /^[\w!.\?\~][\w!.\?\~@ ]{0,30}[\w!.\?\~]$/i
     }
 
     hasUser(username){
@@ -53,6 +54,10 @@ class Users{
 
     getAllUsers(){
         return {...this.users};
+    }
+
+    getValidationConfig(){
+        return {usernameRegex: this.usernameRE};
     }
 }
 
