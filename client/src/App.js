@@ -173,7 +173,58 @@ class App extends React.Component {
     pms[toSocketId].lastUpdate = Date.now();
     this.setState({pms: pms});
   }
+
+  __diffUserList(oldList,newList){
+    
+    const oldUsers = Object.keys(oldList);
+    const newUsers = Object.keys(newList);
+    oldUsers.sort();
+    newUsers.sort();
+
+    let oldIndex = 0;
+    let newIndex = 0;
+    let added = [];
+    let removed = [];
+
+    while(oldIndex < oldUsers.length && newIndex < newUsers.length){
+      
+      let oldUser = oldUsers[oldIndex];
+      let newUser = newUsers[newIndex];
+
+      //user in both lists
+      if(oldUser === newUser){
+          oldIndex++;
+          newIndex++;
+      } 
+      //old user not in new list  
+      else if(oldUser < newUser){
+        removed.push(oldUser);
+        oldIndex++;
+      }//new user added
+      else{
+        added.push(newUser);
+        newIndex++;
+      }
+
+    }
+
+    //get remaining
+    if(oldIndex < oldUsers.length){
+      removed = removed.concat(oldUsers.slice(oldIndex));
+    }
+
+    if(newIndex < newUsers.length ){
+      added = added.concat(newUsers.slice(newIndex));
+    }
+
+    return {added,removed}; 
+
+
+  }
 }
+
+
+
 
 
 
