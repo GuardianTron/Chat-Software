@@ -76,7 +76,7 @@ export default MessageWindow;
 
 const Message = ({content}) =>{
 
-    if(content.type.match(/image/)){
+    if(content.type && content.type.match(/image/)){
         return <>{content.senderUsername}:<DownloadedImage buffer={content.payload.buffer} type={content.payload.type} /></>;
     }
     else if(content.channel === "server-announcement"){
