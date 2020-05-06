@@ -90,7 +90,20 @@ class App extends React.Component {
   }
 
   handleUpdateUserList = (data) =>{
-    this.setState({users: data.payload});
+    const {added,removed} = this.__diffUserList(this.state.users,data.payload);
+    const pms = this.state.pms;
+    removed.map(user=>{
+      const socketId = this.state.users[user];
+      if(pms.hasOwnProperty(socketId)){
+        const message = this.chatConnection.__createBasicPrivateMessageObj();
+        message.channel="server-announcement";
+        message.payload=`${user} has left the chat.`;
+
+        pms[socketId].messages.push(message);
+      }
+    });
+
+    this.setState({users: data.payload,pms:pms});
   }
 
   handleWelcome = (data) => {
